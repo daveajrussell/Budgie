@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Data.Abstractions
+namespace Data.Abstractions
 {
 	public interface IRepository<T> where T : class
 	{

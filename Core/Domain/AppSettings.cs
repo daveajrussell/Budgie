@@ -1,6 +1,6 @@
-﻿using Core.Domain.Contracts.Settings;
+﻿using Domain.Contracts.Settings;
 
-namespace Core.Domain
+namespace Domain
 {
     public class AppSettings : IAppSettings
     {

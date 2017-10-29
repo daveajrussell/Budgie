@@ -1,4 +1,4 @@
-﻿namespace Core.Domain.Contracts.Settings
+﻿namespace Domain.Contracts.Settings
 {
     public interface IAppSettings
     {

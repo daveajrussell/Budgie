@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Core\Data\Data.cspr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Core\Domain\Domain.csproj", "{62B32853-92F4-4616-B533-66CE873FA0AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Framework", "Core\Framework\Framework.csproj", "{5413379F-DB63-42EF-9E6F-B1F5AFB192AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Core\Framework\Infrastructure.csproj", "{5413379F-DB63-42EF-9E6F-B1F5AFB192AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgie.App", "App\Budgie.App\Budgie.App.csproj", "{31020208-DC4B-43E4-8123-C99733218EC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgie.App", "App\Budgie.App\Budgie.App.csproj", "{31020208-DC4B-43E4-8123-C99733218EC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

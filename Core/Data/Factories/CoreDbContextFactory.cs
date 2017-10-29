@@ -1,10 +1,10 @@
-﻿using Core.Data.Services;
+﻿using Data.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace Core.Data.Factories
+namespace Data.Factories
 {
     public class CoreDbContextFactory : IDesignTimeDbContextFactory<CoreDbContext>
     {

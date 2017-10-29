@@ -1,11 +1,10 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Threading.Tasks;
-using Core.Data.Abstractions;
+using Data.Abstractions;
 using Microsoft.EntityFrameworkCore.Design;
 using Domain;
 
-namespace Core.Data.Services
+namespace Data.Services
 {
     public class Uow : IUow, IDisposable
     {
@@ -15,14 +14,19 @@ namespace Core.Data.Services
 
         /* Core */
         public IRepository<User> Users => GetStandardRepo<User>();
-        //public IRepository<Client> Clients => GetStandardRepo<Client>();
-        //public ITweetRepository Tweets => GetRepo<ITweetRepository>();
+        public IRepository<Account> Accounts => GetStandardRepo<Account>();
+        public IRepository<Budget> Budgets => GetStandardRepo<Budget>();
+        public IRepository<Category> Categories => GetStandardRepo<Category>();
+        public IRepository<Sheet> Sheets => GetStandardRepo<Sheet>();
+        public IRepository<SubCategory> SubCategories => GetStandardRepo<SubCategory>();
+        public IRepository<Transaction> Transactions => GetStandardRepo<Transaction>();
+        public IRepository<Role> Roles => GetStandardRepo<Role>();
 
         public Uow(IRepositoryProvider repositoryProvider, IDesignTimeDbContextFactory<CoreDbContext> context)
         {
             RepositoryProvider = repositoryProvider;
 
-            //DbContext = context.CreateDbContext();
+            DbContext = context.CreateDbContext(new string[] { });
         }
 
         protected T GetRepo<T>() where T : class

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Core.Data.Abstractions
+namespace Data.Abstractions
 {
     public interface IRepositoryProvider
     {

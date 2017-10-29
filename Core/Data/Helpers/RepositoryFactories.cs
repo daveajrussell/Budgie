@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Core.Data;
 
-namespace LightningApp.Data.Helpers
+namespace Data.Helpers
 {
     public class RepositoryFactories
     {

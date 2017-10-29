@@ -1,31 +1,60 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Data.Services;
+using Domain;
+using Microsoft.AspNetCore.Identity;
+using Data.Helpers;
+using Domain;
 
 namespace Budgie.App
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private const string ConnectionStringName = "AppSettings:ConnectionString";
+
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
+
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<CoreDbContext>(options =>
+                options.UseSqlServer(Configuration[ConnectionStringName]));
+
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<CoreDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddDataLayer();
+
             services.AddMvc();
+
+            services.AddRouting(option =>
+            {
+                option.LowercaseUrls = true;
+                option.AppendTrailingSlash = false;
+            });
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            services.AddMvcCore()
+                .AddAuthorization()
+                .AddJsonFormatters();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

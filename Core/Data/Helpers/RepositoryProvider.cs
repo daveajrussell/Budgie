@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using Core.Data.Abstractions;
+using Data.Abstractions;
 
-namespace LightningApp.Data.Helpers
+namespace Data.Helpers
 {
     public class RepositoryProvider : IRepositoryProvider
     {

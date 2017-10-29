@@ -1,4 +1,4 @@
-﻿using Core.Data.Abstractions;
+﻿using Data.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
