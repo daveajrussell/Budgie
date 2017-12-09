@@ -10,8 +10,14 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="2.0.5" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.0.0" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Budgie.Core\Budgie.Core.csproj" />
+    <ProjectReference Include="..\..\Core\Budgie.Data\Budgie.Data.csproj" />
   </ItemGroup>
 
 </Project>
