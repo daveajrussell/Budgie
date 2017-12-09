@@ -1,6 +1,7 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
 using System.Collections.Generic;
+using Budgie.Framework.Security;
 
 namespace Budgie.Identity
 {
@@ -19,7 +20,7 @@ namespace Budgie.Identity
         {
             return new List<ApiResource>
             {
-                new ApiResource(Constants.ApiName, Constants.ApiDescription)
+                new ApiResource(IdentityConstants.ApiName, IdentityConstants.ApiDescription)
             };
         }
 
@@ -29,20 +30,20 @@ namespace Budgie.Identity
             {
                 new Client
                 {
-                    ClientId = Constants.ClientId,
-                    ClientName = Constants.ClientName,
+                    ClientId = IdentityConstants.ClientId,
+                    ClientName = IdentityConstants.ClientName,
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
 
-                    RedirectUris = { "http://localhost:5003/callback.html" },
-                    PostLogoutRedirectUris = { "http://localhost:5003/index.html" },
-                    AllowedCorsOrigins = { "http://localhost:5003" },
+                    RedirectUris = { "whatever the spa app uri is/callback.html" },
+                    PostLogoutRedirectUris = { "whatever the spa app uri is/index.html" },
+                    AllowedCorsOrigins = { "whatever the spa app uri is" },
 
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        Constants.ApiName
+                        IdentityConstants.ApiName
                     },
                 }
             };

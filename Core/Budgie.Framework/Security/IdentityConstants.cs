@@ -1,6 +1,6 @@
-﻿namespace Budgie.Identity
+﻿namespace Budgie.Framework.Security
 {
-    public static class Constants
+    public static class IdentityConstants
     {
         public const string ApiName = "budgie.api";
         public const string ApiDescription = "Budgie.Api";

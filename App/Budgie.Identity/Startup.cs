@@ -66,7 +66,7 @@ namespace Budgie.Identity
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.SignOutScheme = IdentityServerConstants.SignoutScheme;
 
-                    options.Authority = "https://demo.identityserver.io/";
+                    options.Authority = "whatever the uri is";
                     options.ClientId = "implicit";
 
                     options.TokenValidationParameters = new TokenValidationParameters

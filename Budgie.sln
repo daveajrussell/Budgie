@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgie.Data", "Core\Budgie.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgie.Framework", "Core\Budgie.Framework\Budgie.Framework.csproj", "{0F4106BC-064C-40E5-833E-6184B4F56A94}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{636E196B-7C72-4BA7-B66B-8FD2DCC0CCF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgie.Api", "Api\Budgie.Api\Budgie.Api.csproj", "{04221BF0-812C-47C9-BCE2-E3CB94212450}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,10 @@ Global
 		{0F4106BC-064C-40E5-833E-6184B4F56A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F4106BC-064C-40E5-833E-6184B4F56A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F4106BC-064C-40E5-833E-6184B4F56A94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04221BF0-812C-47C9-BCE2-E3CB94212450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04221BF0-812C-47C9-BCE2-E3CB94212450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04221BF0-812C-47C9-BCE2-E3CB94212450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04221BF0-812C-47C9-BCE2-E3CB94212450}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +54,7 @@ Global
 		{99003B78-FA1F-4524-925D-1FC153481497} = {3E7B8F0B-BC2C-4DE6-8F78-D61544BD6B4F}
 		{879E37A5-B94D-4822-A2F2-53CD4B57096D} = {3E7B8F0B-BC2C-4DE6-8F78-D61544BD6B4F}
 		{0F4106BC-064C-40E5-833E-6184B4F56A94} = {3E7B8F0B-BC2C-4DE6-8F78-D61544BD6B4F}
+		{04221BF0-812C-47C9-BCE2-E3CB94212450} = {636E196B-7C72-4BA7-B66B-8FD2DCC0CCF8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E9B2056-791E-4AD5-88DB-FD386DD308ED}
