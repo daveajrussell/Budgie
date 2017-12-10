@@ -1,58 +1,61 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using IdentityServer4;
-using Microsoft.IdentityModel.Tokens;
+﻿using System.Reflection;
 using Budgie.Core;
 using Budgie.Data.Services;
+using IdentityServerWithAspNetIdentity.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Budgie.Identity
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private const string ConnectionStringName = "AppSettings:ConnectionString";
 
         public IConfiguration Configuration { get; }
 
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
+
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
             services.AddDbContext<BudgieDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration[ConnectionStringName]));
 
-            services.AddIdentity<User, IdentityRole>(options =>
-                {
-                    options.Password.RequiredLength = 16;
-                    options.Password.RequiredUniqueChars = 0;
-                    options.Password.RequireDigit = true;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequireNonAlphanumeric = true;
-                })
+            services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<BudgieDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddMvc();
+
+            var connectionString = Configuration[ConnectionStringName];
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                        builder.UseSqlServer(connectionString,
                             sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                        builder.UseSqlServer(connectionString,
                             sql => sql.MigrationsAssembly(migrationsAssembly));
 
                     options.EnableTokenCleanup = true;
@@ -60,21 +63,7 @@ namespace Budgie.Identity
                 })
                 .AddAspNetIdentity<User>();
 
-            services.AddAuthentication()
-                .AddOpenIdConnect("oidc", "OpenID Connect", options =>
-                {
-                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
-
-                    options.Authority = "whatever the uri is";
-                    options.ClientId = "implicit";
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = "name",
-                        RoleClaimType = "role"
-                    };
-                });
+            services.AddAuthentication();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -84,14 +73,22 @@ namespace Budgie.Identity
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseIdentityServer();
             app.UseStaticFiles();
 
-            app.Run(async (context) =>
+            app.UseIdentityServer();
+
+            app.UseMvc(routes =>
             {
-                await context.Response.WriteAsync("Budgie.Identity");
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
 

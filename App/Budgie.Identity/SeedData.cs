@@ -14,9 +14,9 @@ namespace Budgie.Identity
         {
             Console.WriteLine("Seeding database...");
 
-            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
+                scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
                 var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 context.Database.Migrate();
