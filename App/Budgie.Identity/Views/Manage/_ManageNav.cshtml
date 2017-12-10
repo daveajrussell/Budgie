@@ -1,5 +1,4 @@
-﻿@using IdentityServerWithAspNetIdentity.Views.Manage
-@inject SignInManager<User> SignInManager
+﻿@inject SignInManager<User> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
@@ -13,4 +12,3 @@
     }
     <li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-action="TwoFactorAuthentication">Two-factor authentication</a></li>
 </ul>
-

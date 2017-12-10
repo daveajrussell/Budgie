@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Budgie.Identity.Quickstart.Grants
+namespace Budgie.Identity.UI
 {
     public class GrantsViewModel
     {

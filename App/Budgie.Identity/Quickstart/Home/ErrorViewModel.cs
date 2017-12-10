@@ -1,6 +1,6 @@
 ﻿using IdentityServer4.Models;
 
-namespace Budgie.Identity.Quickstart.Home
+namespace Budgie.Identity.UI
 {
     public class ErrorViewModel
     {

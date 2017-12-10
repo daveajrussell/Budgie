@@ -7,7 +7,7 @@ using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Budgie.Identity.Quickstart.Grants
+namespace Budgie.Identity.UI
 {
     /// <summary>
     /// This sample controller allows a user to revoke grants given to clients

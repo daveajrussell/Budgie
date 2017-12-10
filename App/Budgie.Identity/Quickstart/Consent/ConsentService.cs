@@ -5,7 +5,7 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.Extensions.Logging;
 
-namespace Budgie.Identity.Quickstart.Consent
+namespace Budgie.Identity.UI
 {
     public class ConsentService
     {

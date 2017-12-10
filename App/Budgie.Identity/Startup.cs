@@ -8,13 +8,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Budgie.Identity
 {
     public class Startup
     {
         private const string ConnectionStringName = "AppSettings:ConnectionString";
+        private const string GoogleClientId = "AppSettings:GoogleClientId";
+        private const string GoogleSecret = "AppSettings:GoogleClientSecret";
 
         public IConfiguration Configuration { get; }
 
@@ -31,6 +32,8 @@ namespace Budgie.Identity
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+
             services.AddDbContext<BudgieDbContext>(options =>
                 options.UseSqlServer(Configuration[ConnectionStringName]));
 
@@ -39,8 +42,6 @@ namespace Budgie.Identity
                 .AddDefaultTokenProviders();
 
             services.AddTransient<IEmailSender, EmailSender>();
-
-            services.AddMvc();
 
             var connectionString = Configuration[ConnectionStringName];
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
@@ -65,17 +66,10 @@ namespace Budgie.Identity
                 .AddAspNetIdentity<User>();
 
             services.AddAuthentication()
-                .AddOpenIdConnect("oidc", "OpenID Connect", options =>
+                .AddGoogle("Google", options =>
                 {
-                    options.Authority = "https://demo.identityserver.io/";
-                    options.ClientId = "implicit";
-                    options.SaveTokens = true;
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = "name",
-                        RoleClaimType = "role"
-                    };
+                    options.ClientId = Configuration[GoogleClientId];
+                    options.ClientSecret = Configuration[GoogleSecret];
                 });
         }
 
@@ -93,10 +87,8 @@ namespace Budgie.Identity
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
-
             app.UseIdentityServer();
-
+            app.UseStaticFiles();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

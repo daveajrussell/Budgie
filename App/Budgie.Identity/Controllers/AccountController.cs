@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Budgie.Core;
 using Budgie.Identity.Extensions;
 using Budgie.Identity.Models.AccountViewModels;
-using Budgie.Identity.Quickstart.Account;
+using Budgie.Identity.UI;
 using Budgie.Identity.Services;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Budgie.Core.Constants;
 
 namespace Budgie.Identity.Controllers
 {
@@ -244,6 +245,8 @@ namespace Budgie.Identity.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    await _userManager.AddToRoleAsync(user, BudgieRoles.User);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);

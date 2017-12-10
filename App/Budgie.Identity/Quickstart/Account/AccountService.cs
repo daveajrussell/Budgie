@@ -6,7 +6,7 @@ using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace Budgie.Identity.Quickstart.Account
+namespace Budgie.Identity.UI
 {
     public class AccountService
     {

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Budgie.Identity.Quickstart.Home;
+using Budgie.Identity.UI;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Mvc;
 

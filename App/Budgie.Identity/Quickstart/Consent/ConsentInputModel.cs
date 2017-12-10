@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Budgie.Identity.Quickstart.Consent
+namespace Budgie.Identity.UI
 {
     public class ConsentInputModel
     {

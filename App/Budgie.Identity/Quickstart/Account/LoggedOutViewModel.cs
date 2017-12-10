@@ -1,4 +1,4 @@
-﻿namespace Budgie.Identity.Quickstart.Account
+﻿namespace Budgie.Identity.UI
 {
     public class LoggedOutViewModel
     {
