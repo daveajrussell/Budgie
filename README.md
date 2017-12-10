@@ -5,6 +5,5 @@ A pretty rough WIP right now. I decided I wanted a budgeting app, I didn't want 
 
 Roadmap;
 
-* SPA?
-* Auth0?
-* Can the above and just do an MVC app with angular * bashed in?
+* An API to do.. stuff
+* SPA with some flavour of JS framework, depends how I feel on the morning of whenever I start it. Probably angular, but maybe react if I'm feeling spicy.
