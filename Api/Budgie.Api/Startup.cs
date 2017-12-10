@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Budgie.Data.Services;
-using Budgie.Core;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Budgie.Data.Helpers;
 
@@ -14,6 +12,7 @@ namespace Budgie.Api
     {
         private const string ConnectionStringName = "AppSettings:ConnectionString";
         private const string AppBaseUri = "AppSettings:AppBaseUri";
+        private const string IdentityServerBaseUri = "AppSettings:IdentityServerBaseUri";
 
         public IConfiguration Configuration { get; }
 
@@ -30,23 +29,19 @@ namespace Budgie.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BudgieDbContext>(options =>
-                options.UseSqlServer(Configuration[ConnectionStringName]));
-
-            services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<BudgieDbContext>()
-                .AddDefaultTokenProviders();
-
-            services.AddDataLayer();
-
             services.AddMvcCore()
                 .AddAuthorization()
                 .AddJsonFormatters();
 
+            services.AddDbContext<BudgieDbContext>(options =>
+                options.UseSqlServer(Configuration[ConnectionStringName]));
+
+            services.AddDataLayer();
+
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = Configuration[ConnectionStringName];
+                    options.Authority = Configuration[IdentityServerBaseUri];
                     options.RequireHttpsMetadata = true;
 
                     options.ApiName = Framework.Security.BudgieIdentityConstants.ApiName;
@@ -65,16 +60,9 @@ namespace Budgie.Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            InitialiseDatabase(app);
-
             app.UseCors("default");
             app.UseAuthentication();
             app.UseMvc();
-        }
-
-        private void InitialiseDatabase(IApplicationBuilder app)
-        {
-            SeedData.EnsureSeedData(app);
         }
     }
 }
