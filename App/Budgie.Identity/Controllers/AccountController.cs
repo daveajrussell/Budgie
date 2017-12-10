@@ -2,20 +2,21 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Budgie.Core;
+using Budgie.Identity.Extensions;
+using Budgie.Identity.Models.AccountViewModels;
+using Budgie.Identity.Quickstart.Account;
+using Budgie.Identity.Services;
+using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using IdentityServerWithAspNetIdentity.Models.AccountViewModels;
-using IdentityServerWithAspNetIdentity.Services;
-using IdentityServer4.Quickstart.UI;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
-using Microsoft.AspNetCore.Http;
-using Budgie.Core;
 
-namespace IdentityServerWithAspNetIdentity.Controllers
+namespace Budgie.Identity.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]

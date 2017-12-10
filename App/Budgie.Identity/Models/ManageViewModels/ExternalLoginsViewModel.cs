@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServerWithAspNetIdentity.Models.ManageViewModels
+namespace Budgie.Identity.Models.ManageViewModels
 {
     public class ExternalLoginsViewModel
     {

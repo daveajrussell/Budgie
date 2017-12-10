@@ -1,4 +1,4 @@
-﻿namespace IdentityServer4.Quickstart.UI
+﻿namespace Budgie.Identity.Quickstart.Account
 {
     public class LogoutViewModel : LogoutInputModel
     {

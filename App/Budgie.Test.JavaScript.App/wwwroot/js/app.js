@@ -23,7 +23,7 @@ var config = {
     client_id: "budgie.spa.app",
     redirect_uri: "https://localhost:44372/callback.html",
     response_type: "id_token token",
-    scope:"budgie.api",
+    scope:"openid profile budgie.api",
     post_logout_redirect_uri: "https://localhost:44372/index.html",
 };
 var mgr = new Oidc.UserManager(config);

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace IdentityServerWithAspNetIdentity.Services
+namespace Budgie.Identity.Services
 {
     public class EmailSender : IEmailSender
     {

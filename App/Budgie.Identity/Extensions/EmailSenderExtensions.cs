@@ -1,7 +1,8 @@
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Budgie.Identity.Services;
 
-namespace IdentityServerWithAspNetIdentity.Services
+namespace Budgie.Identity.Extensions
 {
     public static class EmailSenderExtensions
     {

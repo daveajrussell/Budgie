@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServerWithAspNetIdentity.Models.ManageViewModels
+namespace Budgie.Identity.Models.ManageViewModels
 {
     public class EnableAuthenticatorViewModel
     {

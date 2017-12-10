@@ -1,6 +1,7 @@
-using IdentityServerWithAspNetIdentity.Controllers;
+using Budgie.Identity.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Microsoft.AspNetCore.Mvc
+namespace Budgie.Identity.Extensions
 {
     public static class UrlHelperExtensions
     {

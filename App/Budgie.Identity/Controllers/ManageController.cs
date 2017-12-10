@@ -3,16 +3,17 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Budgie.Core;
+using Budgie.Identity.Extensions;
+using Budgie.Identity.Models.ManageViewModels;
+using Budgie.Identity.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using IdentityServerWithAspNetIdentity.Models.ManageViewModels;
-using IdentityServerWithAspNetIdentity.Services;
-using Budgie.Core;
 
-namespace IdentityServerWithAspNetIdentity.Controllers
+namespace Budgie.Identity.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]

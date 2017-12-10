@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServerWithAspNetIdentity.Models.AccountViewModels
+namespace Budgie.Identity.Models.AccountViewModels
 {
     public class ExternalLoginViewModel
     {

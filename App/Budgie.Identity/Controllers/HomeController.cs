@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Budgie.Identity.Quickstart.Home;
 using IdentityServer4.Services;
-using IdentityServer4.Quickstart.UI;
+using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServerWithAspNetIdentity.Controllers
+namespace Budgie.Identity.Controllers
 {
     public class HomeController : Controller
     {

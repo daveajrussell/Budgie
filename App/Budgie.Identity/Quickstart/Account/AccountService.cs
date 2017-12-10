@@ -1,12 +1,12 @@
-﻿using IdentityModel;
+﻿using System.Threading.Tasks;
+using IdentityModel;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 
-namespace IdentityServer4.Quickstart.UI
+namespace Budgie.Identity.Quickstart.Account
 {
     public class AccountService
     {

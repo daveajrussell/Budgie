@@ -1,11 +1,11 @@
 ﻿using Budgie.Core;
+using Budgie.Core.Constants;
 using Budgie.Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,6 +34,25 @@ namespace Budgie.Api
 
         private static async Task EnsureSeedData(BudgieDbContext context, UserManager<User> userManager)
         {
+            if (!context.Roles.Any())
+            {
+                var admin = new Role
+                {
+                    Name = BudgieRoles.Admin
+                };
+
+                await context.Roles.AddAsync(admin);
+
+                var user = new Role
+                {
+                    Name = BudgieRoles.User
+                };
+
+                await context.AddAsync(user);
+
+                await context.SaveChangesAsync();
+            }
+
             if (!context.Users.Any())
             {
                 var root = new User
@@ -46,6 +65,8 @@ namespace Budgie.Api
 
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(root, BudgieRoles.Admin);
+                    await userManager.AddToRoleAsync(root, BudgieRoles.User);
                 }
             }
         }

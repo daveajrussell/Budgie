@@ -1,4 +1,4 @@
-﻿namespace IdentityServerWithAspNetIdentity.Models.ManageViewModels
+﻿namespace Budgie.Identity.Models.ManageViewModels
 {
     public class RemoveLoginViewModel
     {

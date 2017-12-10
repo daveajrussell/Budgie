@@ -1,13 +1,14 @@
 ﻿using System.Reflection;
 using Budgie.Core;
 using Budgie.Data.Services;
-using IdentityServerWithAspNetIdentity.Services;
+using Budgie.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Budgie.Identity
 {
@@ -63,7 +64,19 @@ namespace Budgie.Identity
                 })
                 .AddAspNetIdentity<User>();
 
-            services.AddAuthentication();
+            services.AddAuthentication()
+                .AddOpenIdConnect("oidc", "OpenID Connect", options =>
+                {
+                    options.Authority = "https://demo.identityserver.io/";
+                    options.ClientId = "implicit";
+                    options.SaveTokens = true;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "name",
+                        RoleClaimType = "role"
+                    };
+                });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
