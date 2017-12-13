@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Budgie.Data.Services;
 using Microsoft.EntityFrameworkCore;
 using Budgie.Data.Helpers;
+using Budgie.Framework.Facade.Middlewares;
+using Budgie.Framework.Security;
 
 namespace Budgie.Api
 {
@@ -37,6 +39,8 @@ namespace Budgie.Api
                 options.UseSqlServer(Configuration[ConnectionStringName]));
 
             services.AddDataLayer();
+
+            services.AddTransient<ITokenResolverMiddleware, TokenResolverMiddleware>();
 
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>

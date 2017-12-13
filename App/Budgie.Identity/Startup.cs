@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Budgie.Identity.Security;
+using IdentityServer4.Services;
 
 namespace Budgie.Identity
 {
@@ -43,6 +45,8 @@ namespace Budgie.Identity
 
             services.AddTransient<IEmailSender, EmailSender>();
 
+            services.AddTransient<IProfileService, BudgieProfileService>();
+
             var connectionString = Configuration[ConnectionStringName];
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
@@ -63,7 +67,8 @@ namespace Budgie.Identity
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30;
                 })
-                .AddAspNetIdentity<User>();
+                .AddAspNetIdentity<User>()
+                .AddProfileService<BudgieProfileService>();
 
             services.AddAuthentication()
                 .AddGoogle("Google", options =>

@@ -2,6 +2,6 @@
 {
     public static class BudgieClaimTypes
     {
-        public const string UniqueId = "";
+        public const string SubjectId = "sub";
     }
 }

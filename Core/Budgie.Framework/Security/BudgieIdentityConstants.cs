@@ -2,6 +2,7 @@
 {
     public static class BudgieIdentityConstants
     {
+        public const string ApiScope = "budgie.api.scope";
         public const string ApiName = "budgie.api";
         public const string ApiDescription = "Budgie.Api";
         public const string ClientId = "budgie.spa.app";

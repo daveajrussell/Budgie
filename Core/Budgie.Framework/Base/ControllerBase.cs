@@ -1,16 +1,33 @@
-﻿using Budgie.Framework.Facade;
+﻿using Budgie.Core;
+using Budgie.Framework.Facade;
+using Budgie.Framework.Facade.Middlewares;
+using Budgie.Framework.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Budgie.Framework.Base
 {
-    public class ControllerBase : Controller
+    public class BaseController : Controller
     {
-        public Ticket Ticket { get; protected set; }
+        private User _currentUser;
 
-        public ControllerBase(IHttpContextAccessor httpContextAccessor)
+        public Token Token
         {
-            Ticket = httpContextAccessor.HttpContext.Items["Ticket"] as Ticket;
+            get
+            {
+                if (_currentUser == null)
+                    _currentUser = HttpContext.RequestServices.GetRequiredService<ITokenResolverMiddleware>().ResolveAsync().Result;
+
+                return new Token
+                {
+
+                };
+            }
+        }
+
+        public BaseController(IHttpContextAccessor httpContextAccessor)
+        {
         }
     }
 }

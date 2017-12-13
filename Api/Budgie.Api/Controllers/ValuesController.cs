@@ -1,13 +1,19 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Budgie.Framework.Base;
+using Microsoft.AspNetCore.Http;
 
 namespace Budgie.Api.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
-    public class ValuesController : Controller
+    public class ValuesController : BaseController
     {
+        public ValuesController(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        {
+        }
+
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()
