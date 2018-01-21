@@ -2,11 +2,14 @@
 using IdentityServer4;
 using IdentityServer4.Models;
 using Budgie.Framework.Security;
+using Microsoft.Extensions.Configuration;
 
 namespace Budgie.Identity
 {
     public class Config
     {
+        private const string AppBaseUri = "AppSettings:AppBaseUri";
+
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
@@ -24,7 +27,7 @@ namespace Budgie.Identity
             };
         }
 
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients(IConfiguration configuration)
         {
             return new List<Client>
             {
@@ -35,9 +38,9 @@ namespace Budgie.Identity
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
 
-                    RedirectUris = { "https://localhost:44350/callback" },
-                    PostLogoutRedirectUris = { "https://localhost:44350/home" },
-                    AllowedCorsOrigins = { "https://localhost:44350" },
+                    RedirectUris = { $"{configuration[AppBaseUri]}/callback" },
+                    PostLogoutRedirectUris = { $"{configuration[AppBaseUri]}/home" },
+                    AllowedCorsOrigins = { $"{configuration[AppBaseUri]}" },
 
                     RequireConsent = false,
 

@@ -116,7 +116,7 @@ namespace Budgie.Identity
 
         private void InitialiseDatabase(IApplicationBuilder app)
         {
-            SeedData.EnsureSeedData(app);
+            SeedData.EnsureSeedData(Configuration, app);
         }
     }
 }

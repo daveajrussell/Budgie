@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Builder;
 using Budgie.Data.Services;
 using Budgie.Core;
 using Budgie.Core.Constants;
+using Microsoft.Extensions.Configuration;
 
 namespace Budgie.Identity
 {
     public class SeedData
     {
-        public static void EnsureSeedData(IApplicationBuilder app)
+        public static void EnsureSeedData(IConfiguration configuration, IApplicationBuilder app)
         {
             Console.WriteLine("Seeding database...");
 
@@ -23,7 +24,7 @@ namespace Budgie.Identity
 
                 var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 context.Database.Migrate();
-                EnsureSeedData(context);
+                EnsureSeedData(context, configuration);
 
                 var budgieContext = scope.ServiceProvider.GetRequiredService<BudgieDbContext>();
                 budgieContext.Database.Migrate();
@@ -56,12 +57,12 @@ namespace Budgie.Identity
             }
         }
 
-        private static void EnsureSeedData(ConfigurationDbContext context)
+        private static void EnsureSeedData(ConfigurationDbContext context, IConfiguration configuration)
         {
             if (!context.Clients.Any())
             {
                 Console.WriteLine("Clients being populated");
-                foreach (var client in Config.GetClients().ToList())
+                foreach (var client in Config.GetClients(configuration).ToList())
                 {
                     context.Clients.Add(client.ToEntity());
                 }
