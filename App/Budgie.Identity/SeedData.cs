@@ -5,6 +5,9 @@ using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using Budgie.Data.Services;
+using Budgie.Core;
+using Budgie.Core.Constants;
 
 namespace Budgie.Identity
 {
@@ -21,10 +24,36 @@ namespace Budgie.Identity
                 var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 context.Database.Migrate();
                 EnsureSeedData(context);
+
+                var budgieContext = scope.ServiceProvider.GetRequiredService<BudgieDbContext>();
+                budgieContext.Database.Migrate();
+                EnsureSeedData(budgieContext);
             }
 
             Console.WriteLine("Done seeding database.");
             Console.WriteLine();
+        }
+
+        private static void EnsureSeedData(BudgieDbContext context)
+        {
+            if (!context.Roles.Any())
+            {
+                Console.WriteLine("Roles being populated");
+
+                context.Roles.Add(new Role
+                {
+                    Name = nameof(BudgieRoles.Admin),
+                    NormalizedName = BudgieRoles.Admin.ToUpper()
+                });
+
+                context.Roles.Add(new Role
+                {
+                    Name = nameof(BudgieRoles.User),
+                    NormalizedName = "USER"
+                });
+
+                context.SaveChanges();
+            }
         }
 
         private static void EnsureSeedData(ConfigurationDbContext context)

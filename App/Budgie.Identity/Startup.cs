@@ -18,6 +18,8 @@ namespace Budgie.Identity
         private const string ConnectionStringName = "AppSettings:ConnectionString";
         private const string GoogleClientId = "AppSettings:GoogleClientId";
         private const string GoogleSecret = "AppSettings:GoogleClientSecret";
+        private const string FacebookClientId = "AppSettings:FacebookClientId";
+        private const string FacebookSecret = "AppSettings:FacebookSecret";
 
         public IConfiguration Configuration { get; }
 
@@ -34,10 +36,14 @@ namespace Budgie.Identity
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration[ConnectionStringName];
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.AddMvc();
 
             services.AddDbContext<BudgieDbContext>(options =>
-                options.UseSqlServer(Configuration[ConnectionStringName]));
+                options.UseSqlServer(connectionString,
+                sql => sql.MigrationsAssembly(migrationsAssembly)));
 
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<BudgieDbContext>()
@@ -46,9 +52,6 @@ namespace Budgie.Identity
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddTransient<IProfileService, BudgieProfileService>();
-
-            var connectionString = Configuration[ConnectionStringName];
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
@@ -76,6 +79,15 @@ namespace Budgie.Identity
                     options.ClientId = Configuration[GoogleClientId];
                     options.ClientSecret = Configuration[GoogleSecret];
                 });
+
+            services.AddAuthentication()
+                .AddFacebook("Facebook", options =>
+                {
+                    options.ClientId = Configuration[FacebookClientId];
+                    options.ClientSecret = Configuration[FacebookSecret];
+                });
+
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

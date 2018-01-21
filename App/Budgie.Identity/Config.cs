@@ -35,9 +35,11 @@ namespace Budgie.Identity
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
 
-                    RedirectUris = { "https://localhost:44372/callback.html" },
-                    PostLogoutRedirectUris = { "https://localhost:44372/index.html" },
-                    AllowedCorsOrigins = { "https://localhost:44372" },
+                    RedirectUris = { "https://localhost:44350/callback" },
+                    PostLogoutRedirectUris = { "https://localhost:44350/home" },
+                    AllowedCorsOrigins = { "https://localhost:44350" },
+
+                    RequireConsent = false,
 
                     AllowedScopes =
                     {
