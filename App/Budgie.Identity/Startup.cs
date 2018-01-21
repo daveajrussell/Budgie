@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Budgie.Identity.Security;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace Budgie.Identity
 {
@@ -40,6 +42,11 @@ namespace Budgie.Identity
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddMvc();
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
 
             services.AddDbContext<BudgieDbContext>(options =>
                 options.UseSqlServer(connectionString,
@@ -93,6 +100,11 @@ namespace Budgie.Identity
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             InitialiseDatabase(app);
+
+            var options = new RewriteOptions()
+                .AddRedirectToHttps();
+
+            app.UseRewriter(options);
 
             if (env.IsDevelopment())
             {

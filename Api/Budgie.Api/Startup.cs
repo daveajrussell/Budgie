@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Budgie.Data.Helpers;
 using Budgie.Framework.Facade.Middlewares;
 using Budgie.Framework.Security;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace Budgie.Api
 {
@@ -34,6 +36,11 @@ namespace Budgie.Api
             services.AddMvcCore()
                 .AddAuthorization()
                 .AddJsonFormatters();
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
 
             services.AddDbContext<BudgieDbContext>(options =>
                 options.UseSqlServer(Configuration[ConnectionStringName]));
@@ -64,6 +71,11 @@ namespace Budgie.Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            var options = new RewriteOptions()
+                .AddRedirectToHttps();
+
+            app.UseRewriter(options);
+
             app.UseCors("default");
             app.UseAuthentication();
             app.UseMvc();
