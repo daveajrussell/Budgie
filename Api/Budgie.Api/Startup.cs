@@ -48,7 +48,7 @@ namespace Budgie.Api
                     options.Authority = Configuration[IdentityServerBaseUri];
                     options.RequireHttpsMetadata = true;
 
-                    options.ApiName = Framework.Security.BudgieIdentityConstants.ApiName;
+                    options.ApiName = BudgieIdentityConstants.ApiName;
                 });
 
             services.AddCors(options =>

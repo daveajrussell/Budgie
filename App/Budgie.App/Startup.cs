@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -13,6 +9,8 @@ namespace Budgie.App
 {
     public class Startup
     {
+        private const string AppBaseUri = "AppSettings:AppBaseUri";
+
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -28,7 +26,7 @@ namespace Budgie.App
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("https://localhost:44350")
+                    policy.WithOrigins(Configuration[AppBaseUri])
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });

@@ -6,11 +6,12 @@
 
 <app asp-prerender-module="ClientApp/dist/main-server"
      asp-prerender-data='new {
-    apiUrl = Configuration["ApiAddress"],
-    identityUrl = Configuration["IdentityServerAddress"]
+    apiUrl = Configuration["ApiBaseUri"],
+    identityUrl = Configuration["IdentityServerBaseUri"]
 }'>Loading...</app>
 
 <script src="~/dist/vendor.js" asp-append-version="true"></script>
+
 @section scripts {
     <script src="~/dist/main-client.js" asp-append-version="true"></script>
 }
