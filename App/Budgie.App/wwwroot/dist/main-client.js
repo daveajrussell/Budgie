@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "12f6e7ddd48e56991fbb"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1dd227811d4db4b8b9a5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -4043,7 +4043,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var FetchDataComponent = (function () {
     function FetchDataComponent(authService, apiUrl) {
         var _this = this;
-        authService.get(apiUrl + 'SampleData/WeatherForecasts').subscribe(function (result) {
+        authService.get(apiUrl + '/api/values').subscribe(function (result) {
             _this.forecasts = result;
         }, function (error) { return console.error(error); });
     }

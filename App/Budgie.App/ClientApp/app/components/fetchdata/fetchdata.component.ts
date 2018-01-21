@@ -6,18 +6,11 @@ import { AuthService } from '../services/auth.service';
     templateUrl: './fetchdata.component.html'
 })
 export class FetchDataComponent {
-    public forecasts: WeatherForecast[];
+    public forecasts: any[];
 
     constructor(authService: AuthService, @Inject('API_URL') apiUrl: string) {
-        authService.get(apiUrl + 'SampleData/WeatherForecasts').subscribe(result => {
-            this.forecasts = result as WeatherForecast[];
+        authService.get(apiUrl + '/api/values').subscribe(result => {
+            this.forecasts = result as any[];
         }, error => console.error(error));
     }
-}
-
-interface WeatherForecast {
-    dateFormatted: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
 }
