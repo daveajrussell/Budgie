@@ -1,9 +1,19 @@
 # Budgie
 A simple budgeting app.
 
-A pretty rough WIP right now. I decided I wanted a budgeting app, I didn't want to pay for YNAB and spreadsheets just weren't cutting it anymore. 
+A pretty rough WIP right now. 
 
-Roadmap;
+I decided I wanted a budgeting app, I didn't want to pay for YNAB and spreadsheets just weren't cutting it anymore. 
 
-* An API to do.. stuff
-* SPA with some flavour of JS framework, depends how I feel on the morning of whenever I start it. Probably angular, but maybe react if I'm feeling spicy.
+TODO;
+
+## API layer
+- Get CORS working properly in the API
+- Actually write the API
+
+## Auth layer
+- Complete migration to CoreUI (Management pages and main layout)
+
+## App layer
+- Begin migration to CoreUI
+- Actually write the App
