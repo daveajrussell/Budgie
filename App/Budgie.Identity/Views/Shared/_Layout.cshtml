@@ -27,30 +27,31 @@
     <!-- Styles required by this views -->
 
 </head>
-<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+<body class="app header-fixed">
 
     <header class="app-header navbar">
-        <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="#"></a>
-        <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <img src="~/src/img/avatar/avatar-1577909_640.png" class="img-avatar" alt="admin@bootstrapmaster.com">
+                </a>
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-header text-center">
+                            <strong>Settings</strong>
+                        </div>
+                        <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage" class="dropdown-item"><i class="fa fa-user"></i> Profile</a>
+                        <div class="divider"></div>
+                        <button type="submit" class="dropdown-item"><i class="fa fa-lock"></i>Log out</button>
+                    </div>
+                </form>
+            </li>
+        </ul>
     </header>
 
     <div class="app-body">
-        <div class="sidebar">
-            <nav class="sidebar-nav">
-                <ul class="nav">
-                    <li class="nav-item">
-                        @*<a class="nav-link" href="index.html"><i class="icon-speedometer"></i> Dashboard <span class="badge badge-primary">NEW</span></a>*@
-                    </li>
 
-                </ul>
-            </nav>
-            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
-        </div>
+        @RenderSection("breadcrumb", false)
 
         <!-- Main content -->
         <main class="main">
