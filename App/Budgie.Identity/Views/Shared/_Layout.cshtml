@@ -5,6 +5,12 @@
     * Copyright (c) 2018 creativeLabs Łukasz Holeczek
     * @license MIT
 *@
+
+@inject SignInManager<User> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +33,7 @@
     <!-- Styles required by this views -->
 
 </head>
-<body class="app header-fixed">
+<body class="app header-fixed sidebar-fixed">
 
     <header class="app-header navbar">
         <ul class="nav navbar-nav ml-auto">
@@ -38,9 +44,8 @@
                 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
                     <div class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-header text-center">
-                            <strong>Settings</strong>
+                            <strong>Account</strong>
                         </div>
-                        <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage" class="dropdown-item"><i class="fa fa-user"></i> Profile</a>
                         <div class="divider"></div>
                         <button type="submit" class="dropdown-item"><i class="fa fa-lock"></i>Log out</button>
                     </div>
@@ -51,10 +56,48 @@
 
     <div class="app-body">
 
-        @RenderSection("breadcrumb", false)
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav">
+                    <li class="nav-title">
+                        Account settings
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-puzzle"></i> Manage</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item @ManageNavPages.IndexNavClass(ViewContext)">
+                                <a asp-action="Profile" asp-controller="Manage" class="nav-link"><i class="icon-puzzle"></i> Profile</a>
+                            </li>
+                            <li class="nav-item @ManageNavPages.ChangePasswordNavClass(ViewContext)">
+                                <a asp-action="ChangePassword" asp-controller="Manage" class="nav-link"><i class="icon-puzzle"></i> Password</a>
+                            </li>
+                            @if (hasExternalLogins)
+                            {
+                                <li class="nav-item @ManageNavPages.ExternalLoginsNavClass(ViewContext)">
+                                    <a asp-action="ExternalLogins" asp-controller="Manage" class="nav-link"><i class="icon-puzzle"></i> External logins</a>
+                                </li>
+                            }
+                            <li class="nav-item @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)">
+                                <a asp-action="TwoFactorAuthentication" asp-controller="Manage" class="nav-link"><i class="icon-puzzle"></i> 2FA</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="nav-title">
+                        Apps
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""><i class="icon-pie-chart"></i> Budgie</a>
+                    </li>
+                </ul>
+            </nav>
+            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+        </div>
 
         <!-- Main content -->
         <main class="main">
+
+            @RenderSection("breadcrumb", false)
 
             <div class="container-fluid">
                 @RenderBody()
@@ -64,23 +107,6 @@
 
     </div>
 
-    @*<nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Budgie</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    @await Html.PartialAsync("_LoginPartial")
-                </div>
-            </div>
-        </nav>*@
-
     <footer class="app-footer">
         <span><a href="/">Budgie</a> &copy; @DateTime.UtcNow.Year</span>
         <span class="ml-auto">Powered by <a href="http://coreui.io">CoreUI</a></span>
@@ -88,10 +114,10 @@
 
     <!-- Bootstrap and necessary plugins -->
     <script src="~/dist/vendors/js/jquery.min.js"></script>
-    <script src="~/dist/vendors/js/popper.min.js"></script>
+    @*<script src="~/dist/vendors/js/popper.min.js"></script>*@
     <script src="~/dist/vendors/js/bootstrap.min.js"></script>
-    <script src="~/dist/vendors/js/pace.min.js"></script>
-    <script src="~/dist/vendors/js/Chart.min.js"></script>
+    @*<script src="~/dist/vendors/js/pace.min.js"></script>*@
+    @*<script src="~/dist/vendors/js/Chart.min.js"></script>*@
 
     <!-- CoreUI main scripts -->
 
@@ -99,7 +125,7 @@
 
     <!-- Plugins and scripts required by this views -->
     <!-- Custom scripts required by this view -->
-    <script src="~/src/js/views/main.js"></script>
+    @*<script src="~/src/js/views/main.js"></script>*@
 
     @RenderSection("Scripts", required: false)
 </body>

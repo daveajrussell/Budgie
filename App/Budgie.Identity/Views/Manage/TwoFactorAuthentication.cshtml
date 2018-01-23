@@ -1,10 +1,15 @@
 @model TwoFactorAuthenticationViewModel
 @{
-    ViewData["Title"] = "Two-factor authentication";
     ViewData.AddActivePage(ManageNavPages.TwoFactorAuthentication);
 }
 
-<h4>@ViewData["Title"]</h4>
+@section breadcrumb {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Profile" asp-controller="Manage">Profile</a></li>
+        <li class="breadcrumb-item active">Two-factor authentication</li>
+    </ol>
+}
+
 @if (Model.Is2faEnabled)
 {
     if (Model.RecoveryCodesLeft == 0)
@@ -18,32 +23,50 @@
     {
         <div class="alert alert-danger">
             <strong>You have 1 recovery code left.</strong>
-            <p>You can <a asp-action="GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+            <p>You can <a asp-action="GenerateRecoveryCodes" asp-controller="Manage">generate a new set of recovery codes</a>.</p>
         </div>
     }
     else if (Model.RecoveryCodesLeft <= 3)
     {
         <div class="alert alert-warning">
             <strong>You have @Model.RecoveryCodesLeft recovery codes left.</strong>
-            <p>You should <a asp-action="GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+            <p>You should <a asp-action="GenerateRecoveryCodes" asp-controller="Manage">generate a new set of recovery codes</a>.</p>
         </div>
     }
-
-    <a asp-action="Disable2faWarning" class="btn btn-default">Disable 2FA</a>
-    <a asp-action="GenerateRecoveryCodes" class="btn btn-default">Reset recovery codes</a>
 }
 
-<h5>Authenticator app</h5>
-@if (!Model.HasAuthenticator)
-{
-    <a asp-action="EnableAuthenticator" class="btn btn-default">Add authenticator app</a>
-}
-else
-{
-    <a asp-action="EnableAuthenticator" class="btn btn-default">Configure authenticator app</a>
-    <a asp-action="ResetAuthenticatorWarning" class="btn btn-default">Reset authenticator key</a>
-}
+<div class="row">
+    @if (Model.Is2faEnabled)
+    {
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Two-factor authentication
+                </div>
+                <div class="card-body">
+                    <a asp-action="Disable2faWarning" asp-controller="Manage" class="btn btn-warning">Disable 2FA</a>
+                    <a asp-action="GenerateRecoveryCodes" asp-controller="Manage" class="btn btn-danger">Reset recovery codes</a>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Two-factor authentication
+            </div>
+            <div class="card-body">
 
-@section Scripts {
-    
-}
+                @if (!Model.HasAuthenticator)
+                {
+                    <a asp-action="EnableAuthenticator" asp-controller="Manage" class="btn btn-primary">Add authenticator app</a>
+                }
+                else
+                {
+                    <a asp-action="EnableAuthenticator" asp-controller="Manage" class="btn btn-primary">Configure authenticator app</a>
+                    <a asp-action="ResetAuthenticatorWarning" asp-controller="Manage" class="btn btn-warning">Reset authenticator key</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

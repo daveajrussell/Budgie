@@ -2,7 +2,7 @@
 
 namespace Budgie.Identity.Models.ManageViewModels
 {
-    public class IndexViewModel
+    public class ProfileViewModel
     {
         public string Username { get; set; }
 

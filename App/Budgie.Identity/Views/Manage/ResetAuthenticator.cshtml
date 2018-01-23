@@ -1,9 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Reset authenticator key";
     ViewData.AddActivePage(ManageNavPages.TwoFactorAuthentication);
 }
 
-<h4>@ViewData["Title"]</h4>
+@section breadcrumb {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Profile" asp-controller="Manage">Profile</a></li>
+        <li class="breadcrumb-item active"><a asp-action="TwoFactorAuthentication" asp-controller="Manage">Two-factor authentication</a></li>
+        <li class="breadcrumb-item active">Reset authenticator</li>
+    </ol>
+}
+
 <div class="alert alert-warning" role="alert">
     <p>
         <span class="glyphicon glyphicon-warning-sign"></span>
@@ -14,8 +20,19 @@
         If you do not complete your authenticator app configuration you may lose access to your account.
     </p>
 </div>
-<div>
-    <form asp-action="ResetAuthenticator" method="post" class="form-group">
-        <button class="btn btn-danger" type="submit">Reset authenticator key</button>
-    </form>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Reset authenticator key
+            </div>
+
+            <div class="card-body">
+                <form asp-action="ResetAuthenticator" asp-controller="Manage" method="post">
+                    <button class="btn btn-danger" type="submit">Reset authenticator key</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

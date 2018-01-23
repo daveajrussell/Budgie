@@ -27,7 +27,7 @@ namespace Budgie.Identity.UI
         public static string PageNavClass(ViewContext viewContext, string page)
         {
             var activePage = viewContext.ViewData["ActivePage"] as string;
-            return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : null;
+            return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "open" : null;
         }
 
         public static void AddActivePage(this ViewDataDictionary viewData, string activePage) => viewData[ActivePageKey] = activePage;

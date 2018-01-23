@@ -1,10 +1,16 @@
 ﻿@model GenerateRecoveryCodesViewModel
 @{
-    ViewData["Title"] = "Recovery codes";
     ViewData.AddActivePage(ManageNavPages.TwoFactorAuthentication);
 }
 
-<h4>@ViewData["Title"]</h4>
+@section breadcrumb {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Profile" asp-controller="Manage">Profile</a></li>
+        <li class="breadcrumb-item"><a asp-action="TwoFactorAuthentication" asp-controller="Manage">Two-factor authentication</a></li>
+        <li class="breadcrumb-item active">Recovery codes</li>
+    </ol>
+}
+
 <div class="alert alert-warning" role="alert">
     <p>
         <span class="glyphicon glyphicon-warning-sign"></span>
@@ -14,11 +20,19 @@
         If you lose your device and don't have the recovery codes you will lose access to your account.
     </p>
 </div>
+
 <div class="row">
-    <div class="col-md-12">
-        @for (var row = 0; row < Model.RecoveryCodes.Count(); row += 2)
-        {
-            <code>@Model.RecoveryCodes[row]</code><text>&nbsp;</text><code>@Model.RecoveryCodes[row + 1]</code><br />
-        }
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                Recovery codes
+            </div>
+            <div class="card-body">
+                @for (var row = 0; row < Model.RecoveryCodes.Count(); row += 2)
+                {
+                    <code>@Model.RecoveryCodes[row]</code><text>&nbsp;</text><code>@Model.RecoveryCodes[row + 1]</code><br />
+                }
+            </div>
+        </div>
     </div>
 </div>

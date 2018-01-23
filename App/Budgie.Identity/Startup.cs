@@ -41,6 +41,11 @@ namespace Budgie.Identity
             var connectionString = Configuration[ConnectionStringName];
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
+            services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+            });
+
             services.AddMvc();
 
             services.Configure<MvcOptions>(options =>

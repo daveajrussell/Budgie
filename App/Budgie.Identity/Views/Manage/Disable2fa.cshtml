@@ -1,9 +1,14 @@
 ﻿@{
-    ViewData["Title"] = "Disable two-factor authentication (2FA)";
     ViewData.AddActivePage(ManageNavPages.TwoFactorAuthentication);
 }
 
-<h2>@ViewData["Title"]</h2>
+@section breadcrumb {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Profile" asp-controller="Manage">Profile</a></li>
+        <li class="breadcrumb-item"><a asp-action="TwoFactorAuthentication" asp-controller="Manage">Two-factor authentication</a></li>
+        <li class="breadcrumb-item active">Disable Two-factor authentication</li>
+    </ol>
+}
 
 <div class="alert alert-warning" role="alert">
     <p>
@@ -12,13 +17,24 @@
     </p>
     <p>
         Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a asp-action="ResetAuthenticatorWarning">reset your
-        authenticator keys.</a>
+        used in an authenticator app you should <a asp-action="ResetAuthenticatorWarning" asp-controller="Manage">
+            reset your
+            authenticator keys.
+        </a>
     </p>
 </div>
 
-<div>
-    <form asp-action="Disable2fa" method="post" class="form-group">
-        <button class="btn btn-danger" type="submit">Disable 2FA</button>
-    </form>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Disable two-factor authentication
+            </div>
+            <div class="card-body">
+                <form asp-action="Disable2fa" asp-controller="Manage" method="post">
+                    <button class="btn btn-danger" type="submit">Disable 2FA</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
