@@ -9,6 +9,7 @@ using Budgie.Framework.Facade.Middlewares;
 using Budgie.Framework.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace Budgie.Api
 {
@@ -33,6 +34,16 @@ namespace Budgie.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins(Configuration[AppBaseUri])
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             services.AddMvcCore()
                 .AddAuthorization()
                 .AddJsonFormatters();
@@ -40,6 +51,7 @@ namespace Budgie.Api
             services.Configure<MvcOptions>(options =>
             {
                 options.Filters.Add(new RequireHttpsAttribute());
+                options.Filters.Add(new CorsAuthorizationFilterFactory("default"));
             });
 
             services.AddDbContext<BudgieDbContext>(options =>
@@ -54,19 +66,8 @@ namespace Budgie.Api
                 {
                     options.Authority = Configuration[IdentityServerBaseUri];
                     options.RequireHttpsMetadata = true;
-
                     options.ApiName = BudgieIdentityConstants.ApiName;
                 });
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("default", policy =>
-                {
-                    policy.WithOrigins(Configuration[AppBaseUri])
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
