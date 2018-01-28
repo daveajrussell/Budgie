@@ -18,7 +18,6 @@ import { AuthService } from './services/auth.service';
 import { environment } from '../environments/environment';
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
-  console.log('APP_INITIALIZER STARTING');
   return () => oidcConfigService.load_using_stsServer(environment.identityServerBaseUri);
 }
 

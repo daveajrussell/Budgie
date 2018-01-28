@@ -1,5 +1,5 @@
 {
-  "name": "Budgie.App.NgNext",
+  "name": "Budgie.App",
   "version": "0.0.0",
   "dependencies": {
     "@angular-devkit/build-optimizer": {
