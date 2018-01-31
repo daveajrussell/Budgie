@@ -10,6 +10,7 @@ using Budgie.Framework.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Budgie.Api
 {
@@ -34,24 +35,25 @@ namespace Budgie.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc()
+                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.WithOrigins(Configuration[AppBaseUri]);
+            corsBuilder.AllowCredentials();
+
             services.AddCors(options =>
             {
-                options.AddPolicy("default", policy =>
-                {
-                    policy.WithOrigins(Configuration[AppBaseUri])
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
+                options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
             });
-
-            services.AddMvcCore()
-                .AddAuthorization()
-                .AddJsonFormatters();
 
             services.Configure<MvcOptions>(options =>
             {
                 options.Filters.Add(new RequireHttpsAttribute());
-                options.Filters.Add(new CorsAuthorizationFilterFactory("default"));
+                options.Filters.Add(new CorsAuthorizationFilterFactory("SiteCorsPolicy"));
             });
 
             services.AddDbContext<BudgieDbContext>(options =>
@@ -76,10 +78,9 @@ namespace Budgie.Api
                 .AddRedirectToHttps();
 
             app.UseRewriter(options);
-
-            app.UseCors("default");
             app.UseAuthentication();
             app.UseMvc();
+            app.UseCors("SiteCorsPolicy");
         }
     }
 }

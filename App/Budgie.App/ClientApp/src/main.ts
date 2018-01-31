@@ -21,10 +21,8 @@ const providers = [
   { provide: 'API_URL', useFactory: apiUrlFactory, deps: [] },
   { provide: 'IDENTITY_URL', useFactory: identityUrlFactory, deps: [] },
 ];
-
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic(providers).bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+platformBrowserDynamic(providers).bootstrapModule(AppModule);

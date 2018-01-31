@@ -1,49 +1,97 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetchdata/fetchdata.component';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 import { AuthModule, OidcSecurityService, OidcConfigService } from 'angular-auth-oidc-client';
 import { AuthService } from './services/auth.service';
 
 import { environment } from '../environments/environment';
 
+// Import containers
+import {
+  FullLayoutComponent,
+  SimpleLayoutComponent
+} from './containers';
+
+const APP_CONTAINERS = [
+  FullLayoutComponent,
+  SimpleLayoutComponent
+]
+
+// Import components
+import {
+  AppAsideComponent,
+  AppBreadcrumbsComponent,
+  AppFooterComponent,
+  AppHeaderComponent,
+  AppSidebarComponent,
+  AppSidebarFooterComponent,
+  AppSidebarFormComponent,
+  AppSidebarHeaderComponent,
+  AppSidebarMinimizerComponent,
+  AppUnauthorizedComponent,
+  APP_SIDEBAR_NAV
+} from './components';
+
+const APP_COMPONENTS = [
+  AppAsideComponent,
+  AppBreadcrumbsComponent,
+  AppFooterComponent,
+  AppHeaderComponent,
+  AppSidebarComponent,
+  AppSidebarFooterComponent,
+  AppSidebarFormComponent,
+  AppSidebarHeaderComponent,
+  AppSidebarMinimizerComponent,
+  APP_SIDEBAR_NAV
+]
+
+// Import directives
+import {
+  AsideToggleDirective,
+  NAV_DROPDOWN_DIRECTIVES,
+  ReplaceDirective,
+  SIDEBAR_TOGGLE_DIRECTIVES
+} from './directives';
+
+const APP_DIRECTIVES = [
+  AsideToggleDirective,
+  NAV_DROPDOWN_DIRECTIVES,
+  ReplaceDirective,
+  SIDEBAR_TOGGLE_DIRECTIVES
+]
+
+// Import routing module
+import { AppRoutingModule } from './app.routing';
+
+// Import 3rd party components
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
+
 export function loadConfig(oidcConfigService: OidcConfigService) {
   return () => oidcConfigService.load_using_stsServer(environment.identityServerBaseUri);
 }
 
 @NgModule({
+  imports: [
+    HttpClientModule,
+    AuthModule.forRoot(),
+    BrowserModule,
+    AppRoutingModule,
+    BsDropdownModule.forRoot(),
+    TabsModule.forRoot(),
+    ChartsModule
+  ],
   declarations: [
     AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
-    UnauthorizedComponent
-  ],
-  imports: [
-    AuthModule.forRoot(),
-    CommonModule,
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    HttpClientModule,
-    FormsModule,
-    RouterModule.forRoot([
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: HomeComponent },
-      { path: 'unauthorized', component: UnauthorizedComponent },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetchdata', component: FetchDataComponent },
-      { path: '**', redirectTo: 'home' }
-    ])
+    ...APP_CONTAINERS,
+    ...APP_COMPONENTS,
+    ...APP_DIRECTIVES
   ],
   providers: [
     AuthModule,
@@ -56,7 +104,10 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
       deps: [OidcConfigService],
       multi: true
     },
-  ],
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
