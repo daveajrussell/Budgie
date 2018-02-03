@@ -10,32 +10,24 @@ import { BudgetSheetComponent } from './budget-sheet.component';
 const routes: Routes = [
   {
     path: '',
-    data: { title: 'Budgets' },
-    component: BudgetsComponent,
+    data: {
+      title: 'Budgets'
+    },
     children: [
-      // {
-      //   path: ':year/:month',
-      //   data: {
-      //     title: '[month] [year]'
-      //   },
-      //   component: BudgetSheetComponent
-      // }
       {
-        path: 'test',
-        component: BudgetSheetComponent,
+        path: '',
+        data: { title: 'Sheets' },
+        component: BudgetsComponent,
+      },
+      {
+        path: ':year/:month',
         data: {
-          title: 'Test'
-        }
+          title: '[month] [year]'
+        },
+        component: BudgetSheetComponent
       }
     ]
-  },
-  // {
-  //   path: ':year/:month',
-  //   data: {
-  //     title: '[month] [year]'
-  //   },
-  //   component: BudgetSheetComponent
-  // }
+  }
 ];
 
 @NgModule({
