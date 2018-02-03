@@ -3,8 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 // Import Containers
 import {
-  FullLayoutComponent,
-  SimpleLayoutComponent
+  FullLayoutComponent
 } from './containers';
 
 export const routes: Routes = [
@@ -23,13 +22,21 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: './views/dashboard/dashboard.module#DashboardModule'
+      },
+      {
+        path: 'accounts',
+        loadChildren: './views/accounts/accounts.module#AccountsModule'
+      },
+      {
+        path: 'budgets',
+        loadChildren: './views/budgets/budgets.module#BudgetsModule'
       }
     ]
   }
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

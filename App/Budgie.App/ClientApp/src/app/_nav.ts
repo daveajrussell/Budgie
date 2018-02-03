@@ -2,10 +2,16 @@ export const navigation = [
   {
     name: 'Dashboard',
     url: '/dashboard',
+    icon: 'icon-speedometer'
+  },
+  {
+    name: 'Accounts',
+    url: '/accounts',
     icon: 'icon-speedometer',
-    badge: {
-      variant: 'info',
-      text: 'NEW'
-    }
+  },
+  {
+    name: 'Budgets',
+    url: '/budgets',
+    icon: 'icon-speedometer'
   }
 ];

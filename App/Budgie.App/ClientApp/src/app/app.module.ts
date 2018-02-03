@@ -8,18 +8,17 @@ import { AppComponent } from './app.component';
 
 import { AuthModule, OidcSecurityService, OidcConfigService } from 'angular-auth-oidc-client';
 import { AuthService } from './services/auth.service';
+import { RouteService } from './services/route.service';
 
 import { environment } from '../environments/environment';
 
 // Import containers
 import {
-  FullLayoutComponent,
-  SimpleLayoutComponent
+  FullLayoutComponent
 } from './containers';
 
 const APP_CONTAINERS = [
-  FullLayoutComponent,
-  SimpleLayoutComponent
+  FullLayoutComponent
 ]
 
 // Import components
@@ -73,14 +72,14 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
-export function loadConfig(oidcConfigService: OidcConfigService) {
-  return () => oidcConfigService.load_using_stsServer(environment.identityServerBaseUri);
-}
+// export function loadConfig(oidcConfigService: OidcConfigService) {
+//   return () => oidcConfigService.load_using_stsServer(environment.identityServerBaseUri);
+// }
 
 @NgModule({
   imports: [
     HttpClientModule,
-    AuthModule.forRoot(),
+    //AuthModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     BsDropdownModule.forRoot(),
@@ -91,19 +90,20 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
     AppComponent,
     ...APP_CONTAINERS,
     ...APP_COMPONENTS,
-    ...APP_DIRECTIVES
+    ...APP_DIRECTIVES,
   ],
   providers: [
-    AuthModule,
-    AuthService,
-    OidcSecurityService,
-    OidcConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: loadConfig,
-      deps: [OidcConfigService],
-      multi: true
-    },
+    RouteService,
+    // AuthModule,
+    // AuthService,
+    // OidcSecurityService,
+    // OidcConfigService,
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: loadConfig,
+    //   deps: [OidcConfigService],
+    //   multi: true
+    // },
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy

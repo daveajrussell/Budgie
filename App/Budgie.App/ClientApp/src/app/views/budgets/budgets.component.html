@@ -1,0 +1,104 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-edit"></i>Sheets
+        </div>
+        <div class="card-body">
+          <div class="form-group row">
+            <div class="col-md-12">
+
+              <div class="btn-group" dropdown>
+                <button dropdownToggle type="button" class="btn btn-outline-primary btn-sm dropdown-toggle">
+                  Previous sheets
+                  <span class="caret"></span>
+                </button>
+                <ul *dropdownMenu class="dropdown-menu" role="menu">
+                  <li role="menuitem">
+                    <a class="dropdown-item" [routerLink]="['//budgets//test']">November 2017</a>
+                  </li>
+                  <li role="menuitem">
+                    <a class="dropdown-item" [routerLink]="['/budgets', '2017', 'december']">December 2017</a>
+                  </li>
+                  <li role="menuitem">
+                    <a class="dropdown-item" [routerLink]="['/budgets', '2018', 'january']">January 2018</a>
+                  </li>
+                </ul>
+              </div>
+
+              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="newAccountModal.show()">
+                Add a sheet
+              </button>
+              <div class="col-md-12">
+                <div class="row">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+  <!--/.row-->
+</div>
+
+<div bsModal #newAccountModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add an account</h4>
+        <button type="button" class="close" (click)="newAccountModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" placeholder="Account name">
+              <div class="col-xs-12 col-12 col-md-4 form-group">
+                <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" #dp="bsDatepicker"
+                  bsDatepicker [(bsValue)]="bsValue">
+              </div>
+              <div class="col-xs-12 col-12 col-md-3 form-group">
+                <button class="btn btn-success" (click)="dp.toggle()">Date Picker</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/.row-->
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="name">Balance</label>
+              <input type="text" class="form-control" id="name" placeholder="Account balance">
+            </div>
+          </div>
+        </div>
+        <!--/.row-->
+        <div class="row">
+          <div class="form-group col-sm-12">
+            <label for="type">Type</label>
+            <select class="form-control" id="type">
+              <option value="1">Current</option>
+              <option value="2">Savings</option>
+              <option value="3">Credit</option>
+            </select>
+          </div>
+        </div>
+        <!--/.row-->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="newAccountModal.hide()">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

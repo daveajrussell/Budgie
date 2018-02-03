@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
-import { AuthService } from './services/auth.service';
+//import { AuthService } from './services/auth.service';
 
 @Component({
   // tslint:disable-next-line
@@ -11,10 +11,11 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent implements OnInit {
 
-  isAuthorizedSubscription: Subscription;
-  isAuthorized: boolean;
+  // isAuthorizedSubscription: Subscription;
+  // isAuthorized: boolean;
 
-  constructor(private router: Router, public authService: AuthService) { }
+  //constructor(private router: Router, public authService: AuthService) { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
     this.router.events.subscribe((evt) => {
@@ -24,25 +25,25 @@ export class AppComponent implements OnInit {
       window.scrollTo(0, 0)
     });
 
-    this.isAuthorizedSubscription = this.authService.getIsAuthorized().subscribe(
-      (isAuthorized: boolean) => {
-        this.isAuthorized = isAuthorized;
-      });
+    // this.isAuthorizedSubscription = this.authService.getIsAuthorized().subscribe(
+    //   (isAuthorized: boolean) => {
+    //     this.isAuthorized = isAuthorized;
+    //   });
   }
 
   ngOnDestroy(): void {
-    this.isAuthorizedSubscription.unsubscribe();
+    //this.isAuthorizedSubscription.unsubscribe();
   }
 
-  public login() {
-    this.authService.login();
-  }
+  // public login() {
+  //   this.authService.login();
+  // }
 
-  public refreshSession() {
-    this.authService.refreshSession();
-  }
+  // public refreshSession() {
+  //   this.authService.refreshSession();
+  // }
 
-  public logout() {
-    this.authService.logout();
-  }
+  // public logout() {
+  //   this.authService.logout();
+  // }
 }

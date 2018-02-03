@@ -21,6 +21,7 @@ const providers = [
   { provide: 'API_URL', useFactory: apiUrlFactory, deps: [] },
   { provide: 'IDENTITY_URL', useFactory: identityUrlFactory, deps: [] },
 ];
+
 if (environment.production) {
   enableProdMode();
 }
