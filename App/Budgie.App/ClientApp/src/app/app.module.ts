@@ -7,8 +7,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 
 import { AuthModule, OidcSecurityService, OidcConfigService } from 'angular-auth-oidc-client';
+
 import { AuthService } from './services/auth.service';
-import { RouteService } from './services/route.service';
+import { AccountsService } from './services/accounts.service';
+import { CategoryService } from './services/category.service';
 
 import { environment } from '../environments/environment';
 
@@ -93,7 +95,8 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     ...APP_DIRECTIVES,
   ],
   providers: [
-    RouteService,
+    AccountsService,
+    CategoryService,
     // AuthModule,
     // AuthService,
     // OidcSecurityService,

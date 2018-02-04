@@ -8,7 +8,7 @@
         <div class="card-body">
           <div class="form-group row">
             <div class="col-md-12">
-              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="newAccountModal.show()">
+              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="openModal(addAccountModal, account)">
                 Add an account
               </button>
             </div>
@@ -24,15 +24,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr *ngFor="let account of accounts">
                 <td>
-                  <a data-toggle="modal" (click)="editAccountModal.show(1)">Nationwide</a>
+                  <a data-toggle="modal" (click)="openModal(editAccountModal, account)">{{account.name}}</a>
                 </td>
-                <td>2012/01/01</td>
-                <td>Current</td>
-                <td>£1,300.00</td>
+                <td>{{account.date}}</td>
+                <td>{{accountTypes[account.type]}}</td>
+                <td>{{account.balance}}</td>
                 <td>
-                  <span class="badge badge-success">Active</span>
+                  <span class="badge" [class.active]="account.status === 1" [class.inactive]="account.status === 2">{{accountStatuses[account.status]}}</span>
                 </td>
               </tr>
             </tbody>
@@ -48,7 +48,7 @@
         <div class="card-body">
           <div class="form-group row">
             <div class="col-md-12">
-              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="newCategoryModal.show()">
+              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="openModal(addCategoryModal, category)">
                 Add a category
               </button>
             </div>
@@ -58,16 +58,18 @@
               <tr>
                 <th>Name</th>
                 <th>Date added</th>
+                <th>Type</th>
                 <th>Colour</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr *ngFor="let category of categories">
                 <td>
-                  <a data-toggle="modal" (click)="editCategoryModal.show(1)">Utilities</a>
+                  <a data-toggle="modal" (click)="openModal(editCategoryModal, category)">{{category.name}}</a>
                 </td>
-                <td>2012/01/01</td>
-                <td>#efefef</td>
+                <td>{{category.date}}</td>
+                <td>{{catgeoryTypes[category.type]}}</td>
+                <td>#{{category.colour}}</td>
               </tr>
             </tbody>
           </table>
@@ -77,197 +79,173 @@
   </div>
 </div>
 
-<div bsModal #newAccountModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Add an account</h4>
-        <button type="button" class="close" (click)="newAccountModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" placeholder="Account name">
-            </div>
-          </div>
+<ng-template #addAccountModal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add an account</h4>
+    <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input [(ngModel)]="bsModalRef.content.name" type="text" class="form-control" id="name" placeholder="Account name">
         </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Balance</label>
-              <input type="text" class="form-control" id="name" placeholder="Account balance">
-            </div>
-          </div>
-        </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="form-group col-sm-12">
-            <label for="type">Type</label>
-            <select class="form-control" id="type">
-              <option value="1">Current</option>
-              <option value="2">Savings</option>
-              <option value="3">Credit</option>
-            </select>
-          </div>
-        </div>
-        <!--/.row-->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="newAccountModal.hide()">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
-    <!-- /.modal-content -->
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Balance</label>
+          <input [(ngModel)]="bsModalRef.content.balance" type="text" class="form-control" id="name" placeholder="Account balance">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label for="type">Type</label>
+        <select [(ngModel)]="bsModalRef.content.type" class="form-control" id="type">
+          <option *ngFor="let key of accountTypeKeys" [value]="key" [label]="accountTypes[key]"></option>
+        </select>
+      </div>
+    </div>
+    <!--/.row-->
   </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addAccount(bsModalRef.content)">Save changes</button>
+  </div>
+</ng-template>
 
-<div bsModal #newCategoryModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Add a category</h4>
-        <button type="button" class="close" (click)="newCategoryModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" placeholder="Category name">
-            </div>
-          </div>
+<ng-template #addCategoryModal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add a category</h4>
+    <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input [(ngModel)]="bsModalRef.content.name" type="text" class="form-control" id="name" placeholder="Category name">
         </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Colour</label>
-              <input type="text" class="form-control" id="name" placeholder="Category colour">
-            </div>
-          </div>
-        </div>
-        <!--/.row-->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="newCategoryModal.hide()">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+    <!--/.row-->
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label for="type">Type</label>
 
-<div bsModal #editAccountModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Edit an account</h4>
-        <button type="button" class="close" (click)="editAccountModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Active</label>
-              <label class="switch switch-text switch-primary">
-                <input type="checkbox" class="switch-input" checked>
-                <span class="switch-label" data-on="&#xf00c;" data-off="&#xf00d;"></span>
-                <span class="switch-handle"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" placeholder="Account name">
-            </div>
-          </div>
-        </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Balance</label>
-              <input type="text" class="form-control" id="name" placeholder="Account balance">
-            </div>
-          </div>
-        </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="form-group col-sm-12">
-            <label for="type">Type</label>
-            <select class="form-control" id="type">
-              <option value="1">Current</option>
-              <option value="2">Savings</option>
-              <option value="3">Credit</option>
-            </select>
-          </div>
-        </div>
-        <!--/.row-->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="editAccountModal.hide()">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <select [(ngModel)]="bsModalRef.content.type" class="form-control" id="type">
+          <option *ngFor="let key of categoryTypeKeys" [value]="key" [label]="catgeoryTypes[key]"></option>
+        </select>
       </div>
     </div>
-    <!-- /.modal-content -->
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="colour">Colour</label>
+          <input [(ngModel)]="bsModalRef.content.colour" type="text" class="form-control" id="colour" placeholder="Category colour">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
   </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addCategory(bsModalRef.content)">Save changes</button>
+  </div>
+</ng-template>
 
-<div bsModal #editCategoryModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Edit a category</h4>
-        <button type="button" class="close" (click)="editCategoryModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" placeholder="Category name">
-            </div>
-          </div>
+<ng-template #editAccountModal>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit an account</h4>
+    <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input [(ngModel)]="bsModalRef.content.name" type="text" class="form-control" id="name" placeholder="Account name">
         </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Colour</label>
-              <input type="text" class="form-control" id="name" placeholder="Category colour">
-            </div>
-          </div>
-        </div>
-        <!--/.row-->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="editCategoryModal.hide()">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
-    <!-- /.modal-content -->
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Balance</label>
+          <input [(ngModel)]="bsModalRef.content.balance" type="text" class="form-control" id="name" placeholder="Account balance">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label for="type">Type</label>
+        <select [(ngModel)]="bsModalRef.content.type" class="form-control" id="type">
+          <option *ngFor="let key of accountTypeKeys" [value]="key" [label]="accountTypes[key]"></option>
+        </select>
+      </div>
+    </div>
+    <!--/.row-->
   </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="editAccount(bsModalRef.content)">Save changes</button>
+  </div>
+</ng-template>
+
+<ng-template #editCategoryModal>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit a category</h4>
+    <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <pre>{{bsModalRef.content | json}}</pre>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input [(ngModel)]="bsModalRef.content.name" type="text" class="form-control" id="name" placeholder="Category name">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label for="type">Type</label>
+
+        <select [(ngModel)]="bsModalRef.content.type" class="form-control" id="type">
+          <option *ngFor="let key of categoryTypeKeys" [value]="key" [label]="catgeoryTypes[key]"></option>
+        </select>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="colour">Colour</label>
+          <input [(ngModel)]="bsModalRef.content.colour" type="text" class="form-control" id="colour" placeholder="Category colour">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="editCategory(bsModalRef.content)">Save changes</button>
+  </div>
+</ng-template>
