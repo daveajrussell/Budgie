@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   templateUrl: 'dashboard.component.html'
@@ -132,7 +133,10 @@ export class DashboardComponent implements OnInit {
       cumulative += 1 * this.random(1, 10);
       this.mainChartData3.push(cumulative);
     }
+
+    this.date = moment().format('MMMM YYYY');
   }
 
   radioModel: string = 'month';
+  date: string = '';
 }

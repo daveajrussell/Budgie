@@ -1,40 +1,153 @@
 <div class="animated fadeIn">
   <div class="row">
-    <div class="col-lg-12">
+    <div class="col-sm-6 col-lg-3">
       <div class="card">
-        <div class="card-header">
-          <i class="fa fa-edit"></i>Sheets
+        <div class="card-body pb-0">
+          <span class="float-left mr-3 mt-2">
+            <a (click)="goBack()">
+              <i class="icon-arrow-left"></i>
+            </a>
+          </span>
+          <span class="float-left">
+            <h4 class="mb-0 text-primary">{{month}}</h4>
+            <p class="text-muted text-uppercase font-weight-bold font-xs">{{year}}</p>
+          </span>
+          <span class="float-right mt-2">
+            <a (click)="goForward()">
+              <i class="icon-arrow-right"></i>
+            </a>
+          </span>
         </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card">
+        <div class="card-body pb-0">
+          <h4 class="mb-0 text-primary">$1.999,50</h4>
+          <p class="text-muted text-uppercase font-weight-bold font-xs">Total budgeted</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card">
+        <div class="card-body pb-0">
+          <h4 class="mb-0 text-primary">$1.999,50</h4>
+          <p class="text-muted text-uppercase font-weight-bold font-xs">Total saved</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card">
+        <div class="card-body pb-0">
+          <h4 class="mb-0 text-success">+$1.999,50</h4>
+          <p class="text-muted text-uppercase font-weight-bold font-xs">Income/expenditure</p>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
         <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="2">Dedicated outgoings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Internet</td>
+                <td>£43.99</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="2">Budgted outgoings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th colspan="2">
+                      Groceries
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Budgeted</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Actual</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Remaining</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th colspan="2">
+                      Travel
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Budgeted</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Actual</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Remaining</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2012/01/01</td>
+                <td>Utilities</td>
+                <td>Internet</td>
+                <td>£43.99</td>
+              </tr>
+            </tbody>
+          </table>
           <div class="form-group row">
             <div class="col-md-12">
-
-              <div class="btn-group" dropdown>
-                <button dropdownToggle type="button" class="btn btn-outline-primary btn-sm dropdown-toggle">
-                  Previous sheets
-                  <span class="caret"></span>
-                </button>
-                <ul *dropdownMenu class="dropdown-menu" role="menu">
-                  <li role="menuitem">
-                    <a class="dropdown-item" [routerLink]="['/budgets', '2017', 'november']">November 2017</a>
-                  </li>
-                  <li role="menuitem">
-                    <a class="dropdown-item" [routerLink]="['/budgets', '2017', 'december']">December 2017</a>
-                  </li>
-                  <li role="menuitem">
-                    <a class="dropdown-item" [routerLink]="['/budgets', '2018', 'january']">January 2018</a>
-                  </li>
-                </ul>
-              </div>
-
-              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="newAccountModal.show()">
-                Add a sheet
+              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="newExpenseModal.show()">
+                Add an expense
               </button>
-              <div class="col-md-12">
-                <div class="row">
-
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -42,15 +155,14 @@
     </div>
     <!--/.col-->
   </div>
-  <!--/.row-->
 </div>
 
-<div bsModal #newAccountModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div bsModal #newExpenseModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Add an account</h4>
-        <button type="button" class="close" (click)="newAccountModal.hide()" aria-label="Close">
+        <button type="button" class="close" (click)="newExpenseModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -93,7 +205,7 @@
         <!--/.row-->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="newAccountModal.hide()">Close</button>
+        <button type="button" class="btn btn-secondary" (click)="newExpenseModal.hide()">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>

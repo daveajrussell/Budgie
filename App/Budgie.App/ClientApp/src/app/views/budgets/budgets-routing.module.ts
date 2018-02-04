@@ -5,26 +5,24 @@ import {
 } from '@angular/router';
 
 import { BudgetsComponent } from './budgets.component';
-import { BudgetSheetComponent } from './budget-sheet.component';
 
 const routes: Routes = [
   {
     path: '',
-    data: {
-      title: 'Budgets'
-    },
     children: [
       {
         path: '',
-        data: { title: 'Sheets' },
+        data: {
+          title: 'Budgets'
+        },
         component: BudgetsComponent,
       },
       {
         path: ':year/:month',
         data: {
-          title: '[month] [year]'
+          title: 'Budgets'
         },
-        component: BudgetSheetComponent
+        component: BudgetsComponent
       }
     ]
   }
