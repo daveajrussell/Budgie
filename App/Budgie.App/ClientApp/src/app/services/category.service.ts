@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { Subscription } from 'rxjs/Subscription';
 import { catchError } from 'rxjs/operators';
 import { BaseService } from 'app/services/base.service';
-import { Category } from 'app/models/category.model';
+import { Category } from 'app/models';
 
 @Injectable()
 export class CategoryService extends BaseService {

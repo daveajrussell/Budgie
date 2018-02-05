@@ -1,12 +1,15 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { AccountsService } from '../../services/accounts.service';
-import { CategoryService } from 'app/services/category.service';
-import { Category } from 'app/models/category.model';
-import { AccountType } from 'app/models/account-type.enum';
-import { CategoryType } from 'app/models/category-type.enum';
-import { AccountStatus } from 'app/models/account-status.enum';
-import { Account } from 'app/models/account.model';
+import { AccountsService, CategoryService } from '../../services';
+
+import {
+  Category,
+  Account,
+  AccountType,
+  CategoryType,
+  AccountStatus
+} from 'app/models';
+
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import * as moment from 'moment';
