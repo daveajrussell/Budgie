@@ -1,24 +1,30 @@
+import { Category } from './category.model';
+
 export class Budget {
+    public readonly id: number = 0;
 
-    public totalBudgeted: number;
-    public totalSaved: number;
-    public incomeVsExpenditure: number;
+    public totalBudgeted: number = 0;
+    public totalSaved: number = 0;
+    public incomeVsExpenditure: number = 0;
 
-    public dedicated: Outgoing[];
-    public budgeted: Outgoing[];
-    public savings: Outgoing[];
+    public incomes: Income[] = new Array();
+    public dedicated: Outgoing[] = new Array();
+    public budgeted: Outgoing[] = new Array();
+    public savings: Outgoing[] = new Array();
 
-    public transaction: Transaction[];
+    public categories: Category[] = new Array();
+
+    public transaction: Transaction[] = new Array();
 }
 
 export class Transaction {
-    public readonly id: number;
-    public date: string;
-    public category: string;
-    public readonly categoryId: number;
-    public amount: number;
-    public notes: string;
-    public type: TransactionType;
+    public readonly id: number = 0;
+    public date: Date = new Date();
+    public category: string = '';
+    public readonly categoryId: number = 0;
+    public amount: number = 0;
+    public notes: string = '';
+    public type: TransactionType = TransactionType.Outgoing;
 }
 
 export enum TransactionType {
@@ -27,15 +33,16 @@ export enum TransactionType {
 }
 
 export class Income {
-    public readonly id: number;
-    public readonly name: string;
-    public readonly balance: number;
+    public readonly id: number = 0;
+    public readonly name: string = '';
+    public readonly total: number = 0;
 }
 
 export class Outgoing {
-    public readonly id: number;
-    public readonly name: string;
-    public readonly budgeted: number;
-    public actual: number;
-    public readonly remaining: number;
+    public readonly id: number = 0;
+    public readonly name: string = '';
+    public readonly budgeted: number = 0;
+    public actual: number = 0;
+    public readonly remaining: number = 0;
+    public readonly category: Category = new Category();
 }

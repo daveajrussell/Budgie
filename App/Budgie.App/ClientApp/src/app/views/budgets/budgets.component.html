@@ -23,7 +23,7 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card">
         <div class="card-body pb-0">
-          <h4 class="mb-0 text-primary">$1.999,50</h4>
+          <h4 class="mb-0 text-primary">£{{budget.totalBudgeted}}</h4>
           <p class="text-muted text-uppercase font-weight-bold font-xs">Total budgeted</p>
         </div>
       </div>
@@ -31,7 +31,7 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card">
         <div class="card-body pb-0">
-          <h4 class="mb-0 text-primary">$1.999,50</h4>
+          <h4 class="mb-0 text-primary">£{{budget.totalSaved}}</h4>
           <p class="text-muted text-uppercase font-weight-bold font-xs">Total saved</p>
         </div>
       </div>
@@ -39,7 +39,11 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card">
         <div class="card-body pb-0">
-          <h4 class="mb-0 text-success">+$1.999,50</h4>
+          <h4 class="mb-0 text-success" [class.textSuccess]="budget.incomeVsExpenditure >= 0" [class.textDanger]="budget.incomeVsExpenditure < 0">
+            <span *ngIf="budget.incomeVsExpenditure >= 0">+</span>
+            <span *ngIf="budget.incomeVsExpenditure < 0">-</span>
+            £{{budget.incomeVsExpenditure}}
+          </h4>
           <p class="text-muted text-uppercase font-weight-bold font-xs">Income/expenditure</p>
         </div>
       </div>
@@ -50,19 +54,19 @@
     <div class="col-md-4">
       <div class="card">
         <div class="card-body">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th colspan="2">Incomes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Salary</td>
-                    <td>£43.99</td>
-                  </tr>
-                </tbody>
-              </table>
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="2">Incomes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let income of budget.incomes">
+                <td>{{income.name}}</td>
+                <td>{{income.total}}</td>
+              </tr>
+            </tbody>
+          </table>
           <table class="table">
             <thead>
               <tr>
@@ -70,62 +74,39 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Internet</td>
-                <td>£43.99</td>
+              <tr *ngFor="let item of budget.dedicated">
+                <td>{{item.name}}</td>
+                <td>{{item.budgeted}}</td>
               </tr>
             </tbody>
           </table>
           <table class="table">
             <thead>
               <tr>
-                <th colspan="2">Budgted outgoings</th>
+                <th colspan="2">Budgeted outgoings</th>
               </tr>
             </thead>
             <tbody>
-              <table class="table table-sm">
+              <table class="table table-sm" *ngFor="let item of budget.budgeted">
                 <thead>
                   <tr>
                     <th colspan="2">
-                      Groceries
+                      {{item.name}}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>Budgeted</td>
-                    <td>£100</td>
+                    <td>£{{item.budgeted}}</td>
                   </tr>
                   <tr>
                     <td>Actual</td>
-                    <td>£67</td>
+                    <td>£{{item.actual}}</td>
                   </tr>
                   <tr>
                     <td>Remaining</td>
-                    <td>£33</td>
-                  </tr>
-                </tbody>
-              </table>
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th colspan="2">
-                      Travel
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Budgeted</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>Actual</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>Remaining</td>
-                    <td></td>
+                    <td>£{{item.remaining}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -143,22 +124,24 @@
               <tr>
                 <th>Date</th>
                 <th>Category</th>
+                <th>Type</th>
                 <th>Amount</th>
                 <th>Notes</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>2012/01/01</td>
-                <td>Utilities</td>
-                <td>£43.99</td>
+              <tr *ngFor="let transaction of budget.transactions">
+                <td>{{transaction.date}}</td>
+                <td>{{transaction.category}}</td>
+                <td>{{transactionTypeKeys[transaction.type]}}</td>
+                <td>£{{transaction.amount}}</td>
                 <td></td>
               </tr>
             </tbody>
           </table>
           <div class="form-group row">
             <div class="col-md-12">
-              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="newExpenseModal.show()">
+              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="newTransactionModal.show()">
                 Add a transaction
               </button>
             </div>
@@ -170,12 +153,12 @@
   </div>
 </div>
 
-<div bsModal #newExpenseModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div bsModal #newTransactionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Add an account</h4>
-        <button type="button" class="close" (click)="newExpenseModal.hide()" aria-label="Close">
+        <h4 class="modal-title">Add a transaction</h4>
+        <button type="button" class="close" (click)="newTransactionModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -183,15 +166,26 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" placeholder="Account name">
-              <div class="col-xs-12 col-12 col-md-4 form-group">
-                <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" #dp="bsDatepicker"
-                  bsDatepicker [(bsValue)]="bsValue">
-              </div>
-              <div class="col-xs-12 col-12 col-md-3 form-group">
-                <button class="btn btn-success" (click)="dp.toggle()">Date Picker</button>
-              </div>
+              <label for="name">Date</label>
+              <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" bsDatepicker [(ngModel)]="bsValue">
+            </div>
+          </div>
+        </div>
+        <!--/.row-->
+        <div class="row">
+          <div class="form-group col-sm-12">
+            <label for="type">Category</label>
+            <select class="form-control" id="category">
+
+            </select>
+          </div>
+        </div>
+        <!--/.row-->
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="name">Amount</label>
+              <input type="text" class="form-control">
             </div>
           </div>
         </div>
@@ -199,26 +193,15 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="form-group">
-              <label for="name">Balance</label>
-              <input type="text" class="form-control" id="name" placeholder="Account balance">
+              <label for="name">Notes</label>
+              <input type="text" class="form-control">
             </div>
-          </div>
-        </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="form-group col-sm-12">
-            <label for="type">Type</label>
-            <select class="form-control" id="type">
-              <option value="1">Current</option>
-              <option value="2">Savings</option>
-              <option value="3">Credit</option>
-            </select>
           </div>
         </div>
         <!--/.row-->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="newExpenseModal.hide()">Close</button>
+        <button type="button" class="btn btn-secondary" (click)="newTransactionModal.hide()">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>

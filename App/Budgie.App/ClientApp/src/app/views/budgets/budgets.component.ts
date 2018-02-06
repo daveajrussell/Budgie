@@ -1,9 +1,12 @@
+import { NgIf, NgForOf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import * as moment from 'moment';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { BudgetService } from '../../services';
+import { Budget, Transaction, TransactionType } from 'app/models';
 
 @Component({
   templateUrl: './budgets.component.html'
@@ -11,10 +14,21 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 export class BudgetsComponent implements OnInit {
 
   currentDate = moment();
-  month = '';
-  year = '';
+  month: string = '';
+  monthNumber: number = 0;
+  year: string = '';
+  yearNumber: number = 0;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  budget: Budget;
+
+  transactionTypes = TransactionType;
+  transactionTypeKeys: any[];
+
+  constructor(private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private budgetService: BudgetService) {
+    this.transactionTypeKeys = Object.keys(TransactionType).filter(Number);
+    this.budget = new Budget();
   }
 
   ngOnInit() {
@@ -23,6 +37,7 @@ export class BudgetsComponent implements OnInit {
         this.currentDate = moment();
         this.setDate();
         this.goToSheet(this.year, this.month);
+        this.getReport();
       } else {
         this.currentDate = moment(`${params.year}-${moment().month(params.month).format("MM")}-01`);
         this.setDate();
@@ -46,19 +61,39 @@ export class BudgetsComponent implements OnInit {
     this.router.navigate(['/budgets', year, month.toLowerCase()]);
   }
 
-  private setDate = () => {
-    this.month = this.currentDate.format('MMMM');
-    this.year = this.currentDate.format('YYYY');
+  addTransaction = (transaction: Transaction) => {
+
   }
 
-  minDate = new Date(2017, 5, 10);
-  maxDate = new Date(2018, 9, 15);
+  editTransaction = (transaction: Transaction) => {
+
+  }
+
+  deleteTransaction = (transaction: Transaction) => {
+
+  }
+
+  private getReport = () => {
+    this.budgetService
+      .getBudget(this.yearNumber, this.monthNumber)
+      .subscribe(budget => this.budget = budget);
+  }
+
+  private setDate = () => {
+    this.month = this.currentDate.format('MMMM');
+    this.monthNumber = this.currentDate.month();
+    this.year = this.currentDate.format('YYYY');
+    this.yearNumber = this.currentDate.year();
+  }
+
+  minDate = new Date(this.currentDate.year(), this.currentDate.month(), moment().startOf('month').date());
+  maxDate = new Date(this.currentDate.year(), this.currentDate.month(), moment().endOf('month').date());
 
   bsValue: Date = new Date();
-  bsRangeValue: any = [new Date(2017, 7, 4), new Date(2017, 7, 20)];
   bsConfig: any = {
     containerClass: 'theme-blue',
     displayMonths: true,
-    showWeekNumbers: false
+    showWeekNumbers: false,
+    dateInputFormat: 'DD/MM/YYYY'
   };
 }

@@ -1,17 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-
 import { HttpClientModule } from '@angular/common/http';
-
 import { AppComponent } from './app.component';
-
-import { AuthModule, OidcSecurityService, OidcConfigService } from 'angular-auth-oidc-client';
-
-import { AuthService } from './services/auth.service';
-import { AccountsService } from './services/accounts.service';
-import { CategoryService } from './services/category.service';
-
 import { environment } from '../environments/environment';
 
 // Import containers
@@ -66,6 +57,28 @@ const APP_DIRECTIVES = [
   SIDEBAR_TOGGLE_DIRECTIVES
 ]
 
+// Import services
+import {
+  AccountsService,
+  AuthService,
+  BudgetService,
+  CategoryService
+} from './services';
+
+const APP_SERVICES = [
+  AccountsService,
+  AuthService,
+  BudgetService,
+  CategoryService
+]
+
+// Import OIDC
+import {
+  AuthModule,
+  OidcSecurityService,
+  OidcConfigService
+} from 'angular-auth-oidc-client';
+
 // Import routing module
 import { AppRoutingModule } from './app.routing';
 
@@ -95,8 +108,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     ...APP_DIRECTIVES,
   ],
   providers: [
-    AccountsService,
-    CategoryService,
+    ...APP_SERVICES,
     // AuthModule,
     // AuthService,
     // OidcSecurityService,
