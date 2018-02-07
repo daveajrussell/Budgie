@@ -35,4 +35,9 @@ export class BudgetService extends BaseService {
     return this.http.patch(this.accountsUrl, transaction, this.httpOptions)
       .pipe(catchError(this.handleError<Transaction>('editTransaction')));
   }
+
+  public deleteTransaction = (transaction: Transaction): Observable<any> => {
+    return this.http.delete(`${this.accountsUrl}/${transaction.id}`, this.httpOptions)
+      .pipe(catchError(this.handleError<Transaction>('deleteTransaction')));
+  }
 }

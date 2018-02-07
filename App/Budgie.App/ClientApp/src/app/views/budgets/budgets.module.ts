@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
@@ -7,6 +7,7 @@ import { BudgetsComponent } from './budgets.component';
 import { BudgetsRoutingModule } from './budgets-routing.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { OutgoingTypeFilterPipe } from '../../pipes';
 
 @NgModule({
   imports: [
@@ -18,7 +19,13 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     BsDatepickerModule.forRoot(),
     BsDropdownModule.forRoot(),
   ],
-  declarations: [BudgetsComponent]
+  declarations: [
+    BudgetsComponent,
+    OutgoingTypeFilterPipe
+  ],
+  providers: [
+    OutgoingTypeFilterPipe
+  ]
 })
 export class BudgetsModule {
 

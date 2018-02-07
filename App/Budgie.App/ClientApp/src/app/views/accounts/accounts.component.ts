@@ -3,6 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AccountsService, CategoryService } from '../../services';
 
 import {
+  Transaction,
   Category,
   Account,
   AccountType,
@@ -61,7 +62,7 @@ export class AccountsComponent implements OnInit {
     this.getCategories();
   }
 
-  openModal(template: TemplateRef<any>, content: Category | Account) {
+  openModal(template: TemplateRef<any>, content: Transaction) {
     this.bsModalRef = this.modalService.show(template);
     this.bsModalRef.content = JSON.parse(JSON.stringify(content));
   }

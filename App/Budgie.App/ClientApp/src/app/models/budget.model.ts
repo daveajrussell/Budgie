@@ -8,13 +8,11 @@ export class Budget {
     public incomeVsExpenditure: number = 0;
 
     public incomes: Income[] = new Array();
-    public dedicated: Outgoing[] = new Array();
-    public budgeted: Outgoing[] = new Array();
-    public savings: Outgoing[] = new Array();
+    public outgoings: Outgoing[] = new Array();
 
     public categories: Category[] = new Array();
 
-    public transaction: Transaction[] = new Array();
+    public transactions: Transaction[] = new Array();
 }
 
 export class Transaction {
@@ -24,12 +22,6 @@ export class Transaction {
     public readonly categoryId: number = 0;
     public amount: number = 0;
     public notes: string = '';
-    public type: TransactionType = TransactionType.Outgoing;
-}
-
-export enum TransactionType {
-    Outgoing = 1,
-    Income = 2
 }
 
 export class Income {

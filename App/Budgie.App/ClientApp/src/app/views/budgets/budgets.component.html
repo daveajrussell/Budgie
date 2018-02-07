@@ -74,7 +74,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of budget.dedicated">
+              <tr *ngFor="let item of budget.outgoings | outgoingTypeFilter:2">
                 <td>{{item.name}}</td>
                 <td>{{item.budgeted}}</td>
               </tr>
@@ -87,7 +87,7 @@
               </tr>
             </thead>
             <tbody>
-              <table class="table table-sm" *ngFor="let item of budget.budgeted">
+              <table class="table table-sm" *ngFor="let item of budget.outgoings | outgoingTypeFilter:3">
                 <thead>
                   <tr>
                     <th colspan="2">
@@ -106,7 +106,7 @@
                   </tr>
                   <tr>
                     <td>Remaining</td>
-                    <td>£{{item.remaining}}</td>
+                    <td>£{{item.budgeted - item.actual}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -124,24 +124,22 @@
               <tr>
                 <th>Date</th>
                 <th>Category</th>
-                <th>Type</th>
                 <th>Amount</th>
                 <th>Notes</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let transaction of budget.transactions">
+              <tr *ngFor="let transaction of budget.transactions" (click)="openModal(editTransactionModal, transaction)">
                 <td>{{transaction.date}}</td>
                 <td>{{transaction.category}}</td>
-                <td>{{transactionTypeKeys[transaction.type]}}</td>
                 <td>£{{transaction.amount}}</td>
-                <td></td>
+                <td>{{transaction.notes}}</td>
               </tr>
             </tbody>
           </table>
           <div class="form-group row">
             <div class="col-md-12">
-              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="newTransactionModal.show()">
+              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="openModal(newTransactionModal, transaction)">
                 Add a transaction
               </button>
             </div>
@@ -153,60 +151,107 @@
   </div>
 </div>
 
-<div bsModal #newTransactionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Add a transaction</h4>
-        <button type="button" class="close" (click)="newTransactionModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Date</label>
-              <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" bsDatepicker [(ngModel)]="bsValue">
-            </div>
-          </div>
+<ng-template #newTransactionModal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add a transaction</h4>
+    <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Date</label>
+          <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" bsDatepicker [(ngModel)]="bsModalRef.content.date">
         </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="form-group col-sm-12">
-            <label for="type">Category</label>
-            <select class="form-control" id="category">
-
-            </select>
-          </div>
-        </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Amount</label>
-              <input type="text" class="form-control">
-            </div>
-          </div>
-        </div>
-        <!--/.row-->
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="name">Notes</label>
-              <input type="text" class="form-control">
-            </div>
-          </div>
-        </div>
-        <!--/.row-->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="newTransactionModal.hide()">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
-    <!-- /.modal-content -->
+    <!--/.row-->
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label for="type">Category</label>
+        <select [(ngModel)]="bsModalRef.content.categoryId" class="form-control" id="category">
+          <option value="0">Select</option>
+          <option *ngFor="let category of categories" [value]="category.id" [label]="category.name"></option>
+        </select>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Amount</label>
+          <input type="number" class="form-control" [(ngModel)]="bsModalRef.content.amount">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Notes</label>
+          <input type="text" class="form-control" [(ngModel)]="bsModalRef.content.notes">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
   </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addTransaction(bsModalRef.content)">Save changes</button>
+  </div>
+</ng-template>
+
+<ng-template #editTransactionModal>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit a transaction</h4>
+    <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Date</label>
+          <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" bsDatepicker [(ngModel)]="bsModalRef.content.date">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label for="type">Category</label>
+        <select [(ngModel)]="bsModalRef.content.categoryId" class="form-control" id="category">
+            <option value="0">Select</option>
+            <option *ngFor="let category of categories" [value]="category.id" [label]="category.name"></option>
+          </select>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Amount</label>
+          <input type="text" class="form-control" [(ngModel)]="bsModalRef.content.amount">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="name">Notes</label>
+          <input type="text" class="form-control" [(ngModel)]="bsModalRef.content.notes">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger left" (click)="deleteTransaction(bsModalRef.content)">Delete</button>
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="editTransaction(bsModalRef.content)">Save changes</button>
+  </div>
+</ng-template>
