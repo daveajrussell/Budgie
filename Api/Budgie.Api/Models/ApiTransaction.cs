@@ -25,6 +25,4 @@ public class ApiTransaction
 
     [DataMember]
     public ApiBudget Budget { get; set; }
-
-
 }

@@ -127,6 +127,7 @@ export class BudgetsComponent implements OnInit {
       .getBudget(this.yearNumber, this.monthNumber + 1)
       .subscribe((budget) => {
         this.budget = budget;
+        console.log(budget);
       });
 
     this.categoryService

@@ -15,6 +15,15 @@ public class ApiBudget
     public int Year { get; set; }
 
     [DataMember]
+    public decimal TotalBudgeted { get; set; }
+
+    [DataMember]
+    public decimal TotalSaved { get; set; }
+
+    [DataMember]
+    public decimal IncomeVsExpenditure { get; set; }
+
+    [DataMember]
     public IEnumerable<ApiIncome> Incomes { get; set; }
 
     [DataMember]

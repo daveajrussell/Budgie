@@ -103,24 +103,118 @@ namespace Budgie.Api.Controllers
         }
 
         [HttpPut]
-        [Route("{year:int}/{month:int}/add")]
-        public async Task<IActionResult> AddTransaction(int year, int month, [FromBody] ApiTransaction model)
+        [Route("add")]
+        public async Task<IActionResult> AddTransaction([FromBody] ApiTransaction model)
         {
-            return await Task.FromResult(new JsonResult(0));
+            var transaction = new Transaction
+            {
+                DateAdded = DateTime.UtcNow,
+                BudgetId = model.Budget.Id,
+                CategoryId = model.Category.Id,
+                Date = model.Date,
+                Amount = model.Amount,
+                Resolved = model.Resolved,
+                Notes = model.Notes
+            };
+
+            await _uow.Transactions.AddAsync(transaction);
+
+            UpdateTransaction(model);
+
+            await _uow.CommitAsync();
+
+            model = _mapper.Map<Transaction, ApiTransaction>(transaction);
+
+            return new JsonResult(model);
         }
 
         [HttpPatch]
-        [Route("{year:int}/{month:int}/edit")]
-        public async Task<IActionResult> EditTransaction(int year, int month, [FromBody] ApiTransaction model)
+        [Route("edit")]
+        public async Task<IActionResult> EditTransaction([FromBody] ApiTransaction model)
         {
-            return await Task.FromResult(new JsonResult(0));
+            var transaction = await _uow.Transactions.GetByIdAsync(model.Id);
+
+            if (transaction != null)
+            {
+                transaction.DateModified = DateTime.UtcNow;
+                transaction.Date = model.Date;
+                transaction.BudgetId = model.Budget.Id;
+                transaction.CategoryId = model.Category.Id;
+                transaction.Amount = model.Amount;
+                transaction.Resolved = model.Resolved;
+                transaction.Notes = model.Notes;
+
+                _uow.Transactions.Update(transaction);
+
+                UpdateTransaction(model);
+
+                await _uow.CommitAsync();
+
+                model = _mapper.Map<Transaction, ApiTransaction>(transaction);
+                return new JsonResult(model);
+            }
+
+            return new NotFoundResult();
+        }
+
+        private void UpdateTransaction(ApiTransaction model)
+        {
+            if (model.Category.Type == CategoryType.Income)
+            {
+                var income = _uow.Incomes.GetAll()
+                .Where(x => x.BudgetId == model.Budget.Id)
+                .Where(x => x.CategoryId == model.Category.Id)
+                .FirstOrDefault();
+
+                if (income != null)
+                {
+                    income.Resolved = model.Resolved;
+                    income.DateModified = DateTime.UtcNow;
+
+                    _uow.Incomes.Update(income);
+                }
+            }
+            else if (model.Category.Type == CategoryType.Dedicated || model.Category.Type == CategoryType.Variable)
+            {
+                var outgoing = _uow.Outgoings.GetAll()
+                .Where(x => x.BudgetId == model.Budget.Id)
+                .Where(x => x.CategoryId == model.Category.Id)
+                .FirstOrDefault();
+
+                if (outgoing != null)
+                {
+                    outgoing.DateModified = DateTime.UtcNow;
+                    outgoing.Resolved = model.Resolved;
+                    outgoing.Actual += model.Amount;
+                    outgoing.Remaining = outgoing.Remaining - model.Amount;
+
+                    _uow.Outgoings.Update(outgoing);
+                }
+            }
+            else if (model.Category.Type == CategoryType.Savings)
+            {
+                var saving = _uow.Savings.GetAll()
+                .Where(x => x.BudgetId == model.Budget.Id)
+                .Where(x => x.CategoryId == model.Category.Id)
+                .FirstOrDefault();
+
+                if (saving != null)
+                {
+                    saving.DateModified = DateTime.UtcNow;
+                    saving.Resolved = model.Resolved;
+
+                    _uow.Savings.Update(saving);
+                }
+            }
         }
 
         [HttpDelete]
-        [Route("{year:int}/{month:int}/id:int")]
-        public async Task<IActionResult> DeleteTransaction(int year, int month, int id)
+        [Route("{id:int}")]
+        public async Task DeleteTransaction(int id, [FromBody] ApiTransaction model)
         {
-            return await Task.FromResult(new JsonResult(0));
+            UpdateTransaction(model);
+            _uow.Transactions.Delete(id);
+            await _uow.CommitAsync();
         }
     }
 }

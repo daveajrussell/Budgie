@@ -8,7 +8,8 @@ export class BaseService {
   constructor() { }
 
   protected httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    body: <any>{}
   };
 
   protected handleError<T>(operation = 'operation', result?: T) {

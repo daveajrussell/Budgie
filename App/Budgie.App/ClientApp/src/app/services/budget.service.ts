@@ -27,16 +27,17 @@ export class BudgetService extends BaseService {
   }
 
   public addTransaction = (transaction: Transaction): Observable<any> => {
-    return this.http.put(this.accountsUrl, transaction, this.httpOptions)
+    return this.http.put(`${this.accountsUrl}/add`, transaction, this.httpOptions)
       .pipe(catchError(this.handleError<Transaction>('addTransaction')));
   }
 
   public editTransaction = (transaction: Transaction): Observable<any> => {
-    return this.http.patch(this.accountsUrl, transaction, this.httpOptions)
+    return this.http.patch(`${this.accountsUrl}/add`, transaction, this.httpOptions)
       .pipe(catchError(this.handleError<Transaction>('editTransaction')));
   }
 
   public deleteTransaction = (transaction: Transaction): Observable<any> => {
+    this.httpOptions.body = transaction;
     return this.http.delete(`${this.accountsUrl}/${transaction.id}`, this.httpOptions)
       .pipe(catchError(this.handleError<Transaction>('deleteTransaction')));
   }
