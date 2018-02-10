@@ -1,17 +1,22 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Budgie.Data.Services;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using AutoMapper;
+using Budgie.Core;
+using Budgie.Core.Enums;
 using Budgie.Data.Helpers;
+using Budgie.Data.Services;
 using Budgie.Framework.Facade.Middlewares;
 using Budgie.Framework.Security;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Budgie.Core;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Budgie.Api
 {
@@ -21,7 +26,10 @@ namespace Budgie.Api
         private const string AppBaseUri = "AppSettings:AppBaseUri";
         private const string IdentityServerBaseUri = "AppSettings:IdentityServerBaseUri";
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration
+        {
+            get;
+        }
 
         public Startup(IHostingEnvironment env)
         {
@@ -40,19 +48,7 @@ namespace Budgie.Api
                 .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling =
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            services.AddDbContext<BudgieDbContext>(options =>
-                options.UseInMemoryDatabase("budgie"));
-
-            services.AddDevelopmentDataLayer();
-
-            services.AddTransient<ITokenResolverMiddleware, TokenResolverMiddleware>();
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc()
-                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling =
-                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddAutoMapper();
 
             var corsBuilder = new CorsPolicyBuilder();
             corsBuilder.AllowAnyHeader();
@@ -67,8 +63,45 @@ namespace Budgie.Api
 
             services.Configure<MvcOptions>(options =>
             {
+                options.Filters.Add(new CorsAuthorizationFilterFactory("SiteCorsPolicy"));
+            });
+
+            services.AddDbContext<BudgieDbContext>(options =>
+                options.UseInMemoryDatabase("budgie"));
+
+            services.AddDevelopmentDataLayer();
+
+            services.AddTransient<ITokenResolverMiddleware, DevTokenResolverMiddleware>();
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc()
+                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddAutoMapper();
+
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.WithOrigins(Configuration[AppBaseUri]);
+            corsBuilder.AllowCredentials();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
+            });
+
+            var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+
+            services.Configure<MvcOptions>(options =>
+            {
                 options.Filters.Add(new RequireHttpsAttribute());
                 options.Filters.Add(new CorsAuthorizationFilterFactory("SiteCorsPolicy"));
+                options.Filters.Add(new AuthorizeFilter(policy));
             });
 
             services.AddDbContext<BudgieDbContext>(options =>
@@ -101,13 +134,13 @@ namespace Budgie.Api
             if (env.IsProduction())
             {
                 var options = new RewriteOptions()
-                                .AddRedirectToHttps();
+                    .AddRedirectToHttps();
 
                 app.UseRewriter(options);
                 app.UseAuthentication();
-                app.UseCors("SiteCorsPolicy");
             }
 
+            app.UseCors("SiteCorsPolicy");
             app.UseMvc();
         }
 
@@ -118,11 +151,50 @@ namespace Budgie.Api
                 Id = 1
             });
 
-            context.Budgets.Add(new Budget
+            context.Categories.Add(new Category
             {
+                Id = 1,
                 UserId = 1,
-                Month = 2,
-                Year = 2018
+                DateAdded = DateTime.UtcNow,
+                Colour = "0f0f0f",
+                Name = "Dedicated test",
+                Type = CategoryType.Dedicated
+            });
+
+            context.Categories.Add(new Category
+            {
+                Id = 2,
+                UserId = 1,
+                DateAdded = DateTime.UtcNow,
+                Colour = "0f0f0f",
+                Name = "Income test",
+                Type = CategoryType.Income,
+                Recurring = true,
+                RecurringDate = DateTime.UtcNow,
+                RecurringValue = 1000
+            });
+
+            context.Categories.Add(new Category
+            {
+                Id = 3,
+                UserId = 1,
+                DateAdded = DateTime.UtcNow,
+                Colour = "0f0f0f",
+                Name = "Variable test",
+                Type = CategoryType.Variable
+            });
+
+            context.Categories.Add(new Category
+            {
+                Id = 4,
+                UserId = 1,
+                DateAdded = DateTime.UtcNow,
+                Colour = "0f0f0f",
+                Name = "Saving test",
+                Type = CategoryType.Savings,
+                Recurring = true,
+                RecurringDate = DateTime.UtcNow,
+                RecurringValue = 100
             });
 
             context.SaveChanges();

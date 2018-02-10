@@ -12,6 +12,12 @@ namespace Budgie.Framework.Base
     [SecurityHeaders]
     public abstract class ApiControllerBase
     {
+        private readonly ITokenResolverMiddleware _tokenResolver;
+        public ApiControllerBase(ITokenResolverMiddleware tokenResolver)
+        {
+            _tokenResolver = tokenResolver;
+        }
+
         [ActionContext]
         public ActionContext ActionContext { get; set; }
 
@@ -30,7 +36,7 @@ namespace Budgie.Framework.Base
             get
             {
                 if (_currentUser == null)
-                    _currentUser = HttpContext.RequestServices.GetRequiredService<ITokenResolverMiddleware>().ResolveAsync().Result;
+                    _currentUser = _tokenResolver.ResolveAsync().Result;
 
                 return new Token
                 {

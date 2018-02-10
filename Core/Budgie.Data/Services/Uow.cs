@@ -15,9 +15,12 @@ namespace Budgie.Data.Services
 
         /* Core */
         public IRepository<User> Users => GetStandardRepo<User>();
-        public IRepository<Budget> Budgets => GetStandardRepo<Budget>();
+        public IBudgetRepository Budgets => GetRepo<IBudgetRepository>();
         public IRepository<Category> Categories => GetStandardRepo<Category>();
         public IRepository<Transaction> Transactions => GetStandardRepo<Transaction>();
+        public IRepository<Income> Incomes => GetStandardRepo<Income>();
+        public IRepository<Outgoing> Outgoings => GetStandardRepo<Outgoing>();
+        public IRepository<Saving> Savings => GetStandardRepo<Saving>();
 
         public Uow(IRepositoryProvider repositoryProvider, BudgieDbContext budgieDbContext)
         {

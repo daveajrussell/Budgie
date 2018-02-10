@@ -4,7 +4,7 @@ namespace Budgie.Core
 {
     public class Income : BaseEntity
     {
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         public bool Resolved { get; set; }
 

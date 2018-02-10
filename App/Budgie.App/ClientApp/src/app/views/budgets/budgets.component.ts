@@ -33,18 +33,15 @@ export class BudgetsComponent implements OnInit {
     dateInputFormat: 'DD/MM/YYYY'
   };
 
-  budget: Budget;
-  transaction: Transaction;
-  categories: Category[];
+  budget: Budget = new Budget();
+  transaction: Transaction = new Transaction();
+  categories: Category[] = new Array();
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
     private budgetService: BudgetService,
     private categoryService: CategoryService,
     private modalService: BsModalService) {
-    this.budget = new Budget();
-    this.transaction = new Transaction();
-    this.categories = new Array();
   }
 
   ngOnInit() {
@@ -52,11 +49,11 @@ export class BudgetsComponent implements OnInit {
       if (!params.year && !params.month) {
         this.currentDate = moment();
         this.setDate();
-        this.goToSheet(this.year, this.month);
-        this.getReport();
+        this.goToBudget(this.year, this.month);
       } else {
         this.currentDate = moment(`${params.year}-${moment().month(params.month).format("MM")}-01`);
         this.setDate();
+        this.getReport();
       }
     });
   }
@@ -73,16 +70,16 @@ export class BudgetsComponent implements OnInit {
   goBack = () => {
     this.currentDate = this.currentDate.subtract(1, 'month');
     this.setDate();
-    this.goToSheet(this.year, this.month);
+    this.goToBudget(this.year, this.month);
   }
 
   goForward = () => {
     this.currentDate = this.currentDate.add(1, 'month');
     this.setDate();
-    this.goToSheet(this.year, this.month);
+    this.goToBudget(this.year, this.month);
   }
 
-  goToSheet = (year: string, month: string) => {
+  goToBudget = (year: string, month: string) => {
     this.router.navigate(['/budgets', year, month.toLowerCase()]);
   }
 
@@ -127,8 +124,10 @@ export class BudgetsComponent implements OnInit {
 
   private getReport = () => {
     this.budgetService
-      .getBudget(this.yearNumber, this.monthNumber)
-      .subscribe(budget => this.budget = budget);
+      .getBudget(this.yearNumber, this.monthNumber + 1)
+      .subscribe((budget) => {
+        this.budget = budget;
+      });
 
     this.categoryService
       .getCategories()

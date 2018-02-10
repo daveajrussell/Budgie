@@ -1,8 +1,11 @@
 export class Category {
-    public readonly id: number;
-    public name: string;
-    public colour: string;
-    public type: CategoryType;
+    public readonly id: number = 0;
+    public name: string = '';
+    public recurring: boolean = false;
+    public recurringDate: Date;
+    public recurringValue: number;
+    public colour: string = '';
+    public type: CategoryType = CategoryType.Variable;
 }
 
 export enum CategoryType {

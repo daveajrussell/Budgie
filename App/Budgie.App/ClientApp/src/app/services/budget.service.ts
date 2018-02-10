@@ -13,11 +13,11 @@ export class BudgetService extends BaseService {
 
   constructor(private http: HttpClient, @Inject('API_URL') baseUrl: string) {
     super();
-    this.accountsUrl = `${baseUrl}/budgets`;
+    this.accountsUrl = `${baseUrl}/api/budgets`;
   }
 
   public getBudget = (year: number, month: number): Observable<Budget> => {
-    return this.http.get<Budget>(this.accountsUrl)
+    return this.http.get<Budget>(`${this.accountsUrl}/${year}/${month}`)
       .pipe(catchError(this.handleError<Budget>('getBudget')));
   }
 

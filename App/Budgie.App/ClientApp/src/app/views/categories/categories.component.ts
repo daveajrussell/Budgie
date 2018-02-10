@@ -1,5 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+
 import { CategoryService } from '../../services';
 
 import {
@@ -22,26 +24,32 @@ export class CategoriesComponent implements OnInit {
   catgeoryTypes = CategoryType;
 
   categories: Category[] = new Array();
-  category: Category = {
-    id: 0,
-    name: '',
-    colour: '',
-    type: this.catgeoryTypes.Variable
-  };
+  category: Category = new Category();
 
   categoryTypeKeys: any[];
+
+  currentDate = moment();
+
+  minDate = new Date(this.currentDate.year(), this.currentDate.month(), moment().startOf('month').date());
+
+  bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(
     private categoryService: CategoryService,
     private modalService: BsModalService) {
     this.categoryTypeKeys = Object.keys(CategoryType).filter(Number);
+
+    this.bsConfig = new BsDatepickerConfig();
+    this.bsConfig.containerClass = 'theme-blue';
+    this.bsConfig.showWeekNumbers = false;
+    this.bsConfig.dateInputFormat = 'DD/MM/YYYY';
   }
 
   ngOnInit() {
     this.getCategories();
   }
 
-  openModal(template: TemplateRef<any>, content: Transaction) {
+  openModal(template: TemplateRef<any>, content: Category) {
     this.bsModalRef = this.modalService.show(template);
     this.bsModalRef.content = JSON.parse(JSON.stringify(content));
   }

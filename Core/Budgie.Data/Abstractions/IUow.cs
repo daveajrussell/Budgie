@@ -9,8 +9,11 @@ namespace Budgie.Data.Abstractions
         Task CommitAsync();
 
         IRepository<User> Users { get; }
-        IRepository<Budget> Budgets { get; }
+        IBudgetRepository Budgets { get; }
         IRepository<Category> Categories { get; }
+        IRepository<Income> Incomes { get; }
+        IRepository<Outgoing> Outgoings { get; }
+        IRepository<Saving> Savings { get; }
         IRepository<Transaction> Transactions { get; }
     }
 }

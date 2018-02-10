@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Budgie.Core.Enums;
 
 namespace Budgie.Core
@@ -7,9 +8,15 @@ namespace Budgie.Core
     {
         public string Name { get; set; }
 
-        public string CategoryColour { get; set; }
+        public bool Recurring { get; set; }
 
-        public CategoryType CategoryType { get; set; }
+        public DateTime? RecurringDate { get; set; }
+
+        public decimal? RecurringValue { get; set; }
+
+        public string Colour { get; set; }
+
+        public CategoryType Type { get; set; }
 
         public int UserId { get; set; }
 

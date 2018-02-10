@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Outgoing, CategoryType } from 'app/models';
 
 @Pipe({
-  name: 'outgoingTypeFilter'
+  name: 'outgoingType'
 })
-export class OutgoingTypeFilterPipe implements PipeTransform {
+export class OutgoingTypePipe implements PipeTransform {
 
   transform(outgoings: Outgoing[], categoryType: CategoryType): Outgoing[] {
     if (!outgoings || !categoryType) {

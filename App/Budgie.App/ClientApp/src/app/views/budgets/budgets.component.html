@@ -62,8 +62,8 @@
             </thead>
             <tbody>
               <tr *ngFor="let income of budget.incomes">
-                <td>{{income.name}}</td>
-                <td>{{income.total}}</td>
+                <td>{{income.category.name}}</td>
+                <td class="text-right">£{{income.total}}</td>
               </tr>
             </tbody>
           </table>
@@ -74,9 +74,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of budget.outgoings | outgoingTypeFilter:2">
-                <td>{{item.name}}</td>
-                <td>{{item.budgeted}}</td>
+              <tr *ngFor="let item of budget.outgoings | outgoingType:2">
+                <td>{{item.category.name}}</td>
+                <td class="text-right">£{{item.budgeted}}</td>
               </tr>
             </tbody>
           </table>
@@ -87,26 +87,26 @@
               </tr>
             </thead>
             <tbody>
-              <table class="table table-sm" *ngFor="let item of budget.outgoings | outgoingTypeFilter:3">
+              <table class="table table-sm" *ngFor="let item of budget.outgoings | outgoingType:3">
                 <thead>
                   <tr>
                     <th colspan="2">
-                      {{item.name}}
+                      {{item.category.name}}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>Budgeted</td>
-                    <td>£{{item.budgeted}}</td>
+                    <td class="text-right">£{{item.budgeted}}</td>
                   </tr>
                   <tr>
                     <td>Actual</td>
-                    <td>£{{item.actual}}</td>
+                    <td class="text-right">£{{item.actual}}</td>
                   </tr>
                   <tr>
                     <td>Remaining</td>
-                    <td>£{{item.budgeted - item.actual}}</td>
+                    <td class="text-right">£{{item.budgeted - item.actual}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -123,22 +123,14 @@
                 <thead>
                   <tr>
                     <th colspan="2">
-                      {{item.name}}
+                      {{item.category.name}}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Budgeted</td>
-                    <td>£{{item.target}}</td>
-                  </tr>
-                  <tr>
-                    <td>Actual</td>
-                    <td>£{{item.actual}}</td>
-                  </tr>
-                  <tr>
-                    <td>Remaining</td>
-                    <td>£{{item.budgeted - item.actual}}</td>
+                    <td>Total</td>
+                    <td class="text-right">£{{item.total}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -195,7 +187,7 @@
       <div class="col-sm-12">
         <div class="form-group">
           <label for="name">Date</label>
-          <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" bsDatepicker [(ngModel)]="bsModalRef.content.date">
+          <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" bsDatepicker [(ngModel)]="bsModalRef.content.date" placeholder="Date of transaction">
         </div>
       </div>
     </div>
@@ -203,7 +195,7 @@
     <div class="row">
       <div class="form-group col-sm-12">
         <label for="type">Category</label>
-        <select [(ngModel)]="bsModalRef.content.categoryId" class="form-control" id="category">
+        <select [(ngModel)]="bsModalRef.content.category.id" class="form-control" id="category">
           <option value="0">Select</option>
           <option *ngFor="let category of categories" [value]="category.id" [label]="category.name"></option>
         </select>
@@ -214,7 +206,7 @@
       <div class="col-sm-12">
         <div class="form-group">
           <label for="name">Amount</label>
-          <input type="number" class="form-control" [(ngModel)]="bsModalRef.content.amount">
+          <input type="number" class="form-control" [(ngModel)]="bsModalRef.content.amount" placeholder="Transaction amount">
         </div>
       </div>
     </div>
@@ -223,7 +215,7 @@
       <div class="col-sm-12">
         <div class="form-group">
           <label for="name">Notes</label>
-          <input type="text" class="form-control" [(ngModel)]="bsModalRef.content.notes">
+          <input type="text" class="form-control" [(ngModel)]="bsModalRef.content.notes" placeholder="Transaction notes">
         </div>
       </div>
     </div>
@@ -256,9 +248,9 @@
       <div class="form-group col-sm-12">
         <label for="type">Category</label>
         <select [(ngModel)]="bsModalRef.content.categoryId" class="form-control" id="category">
-            <option value="0">Select</option>
-            <option *ngFor="let category of categories" [value]="category.id" [label]="category.name"></option>
-          </select>
+          <option value="0">Select</option>
+          <option *ngFor="let category of categories" [value]="category.id" [label]="category.name"></option>
+        </select>
       </div>
     </div>
     <!--/.row-->

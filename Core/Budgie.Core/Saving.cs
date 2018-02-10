@@ -4,7 +4,7 @@ namespace Budgie.Core
 {
     public class Saving : BaseEntity
     {
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         public bool Resolved { get; set; }
 

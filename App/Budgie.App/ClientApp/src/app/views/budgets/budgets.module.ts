@@ -7,7 +7,7 @@ import { BudgetsComponent } from './budgets.component';
 import { BudgetsRoutingModule } from './budgets-routing.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { OutgoingTypeFilterPipe } from '../../pipes';
+import { OutgoingTypePipe } from '../../pipes';
 
 @NgModule({
   imports: [
@@ -21,10 +21,10 @@ import { OutgoingTypeFilterPipe } from '../../pipes';
   ],
   declarations: [
     BudgetsComponent,
-    OutgoingTypeFilterPipe
+    OutgoingTypePipe
   ],
   providers: [
-    OutgoingTypeFilterPipe
+    OutgoingTypePipe
   ]
 })
 export class BudgetsModule {

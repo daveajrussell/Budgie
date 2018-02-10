@@ -1,1 +1,2 @@
-export * from './outgoing-type-filter.pipe';
+export * from './outgoing-type.pipe';
+export * from './date-format.pipe';

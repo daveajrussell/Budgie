@@ -15,7 +15,7 @@ namespace Budgie.Data.Helpers
         {
             return new Dictionary<Type, Func<DbContext, object>>
             {
-                //{ typeof(IRepository), dbContext => new ConcreteRepository(dbContext) }
+                { typeof(IBudgetRepository), dbContext => new BudgetRepository(dbContext) }
             };
         }
 

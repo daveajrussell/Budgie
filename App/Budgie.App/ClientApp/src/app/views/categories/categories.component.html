@@ -27,7 +27,7 @@
                 <td>
                   <a data-toggle="modal" (click)="openModal(editCategoryModal, category)">{{category.name}}</a>
                 </td>
-                <td>{{category.date}}</td>
+                <td>{{category.date | dateFormat}}</td>
                 <td>{{catgeoryTypes[category.type]}}</td>
                 <td>#{{category.colour}}</td>
               </tr>
@@ -38,48 +38,6 @@
     </div>
   </div>
 </div>
-
-<ng-template #addAccountModal>
-  <div class="modal-header">
-    <h4 class="modal-title">Add an account</h4>
-    <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input [(ngModel)]="bsModalRef.content.name" type="text" class="form-control" id="name" placeholder="Account name">
-        </div>
-      </div>
-    </div>
-    <!--/.row-->
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="form-group">
-          <label for="name">Balance</label>
-          <input [(ngModel)]="bsModalRef.content.balance" type="text" class="form-control" id="name" placeholder="Account balance">
-        </div>
-      </div>
-    </div>
-    <!--/.row-->
-    <div class="row">
-      <div class="form-group col-sm-12">
-        <label for="type">Type</label>
-        <select [(ngModel)]="bsModalRef.content.type" class="form-control" id="type">
-          <option *ngFor="let key of accountTypeKeys" [value]="key" [label]="accountTypes[key]"></option>
-        </select>
-      </div>
-    </div>
-    <!--/.row-->
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
-    <button type="button" class="btn btn-primary" (click)="addAccount(bsModalRef.content)">Save changes</button>
-  </div>
-</ng-template>
 
 <ng-template #addCategoryModal>
   <div class="modal-header">
@@ -99,8 +57,42 @@
     </div>
     <!--/.row-->
     <div class="row">
+      <div class="form-group">
+        <label class="col-md-3" for="recurring">Recurring</label>
+        <div class="col-md-9">
+          <label class="switch switch-default switch-primary">
+            <input [(ngModel)]="bsModalRef.content.recurring" id="recurring" type="checkbox" class="switch-input">
+            <span class="switch-label"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div *ngIf="bsModalRef.content.recurring" class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="recurringDate">Date of first occurrence</label>
+          <input [bsConfig]="bsConfig" [minDate]="minDate" bsDatepicker [(ngModel)]="bsModalRef.content.recurringDate" type="text"
+            class="form-control" id="recurringDate" placeholder="Date of first occurrence">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div *ngIf="bsModalRef.content.recurring" class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="recurringValue">Recurring value</label>
+          <input [(ngModel)]="bsModalRef.content.recurringValue" type="text" class="form-control" id="recurringValue" placeholder="Recurring value">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
       <div class="form-group col-sm-12">
         <label for="type">Type</label>
+
+        <pre>{{bsModalRef.content|json}}</pre>
 
         <select [(ngModel)]="bsModalRef.content.type" class="form-control" id="type">
           <option *ngFor="let key of categoryTypeKeys" [value]="key" [label]="catgeoryTypes[key]"></option>
@@ -124,48 +116,6 @@
   </div>
 </ng-template>
 
-<ng-template #editAccountModal>
-  <div class="modal-header">
-    <h4 class="modal-title">Edit an account</h4>
-    <button type="button" class="close" (click)="bsModalRef.hide()" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input [(ngModel)]="bsModalRef.content.name" type="text" class="form-control" id="name" placeholder="Account name">
-        </div>
-      </div>
-    </div>
-    <!--/.row-->
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="form-group">
-          <label for="name">Balance</label>
-          <input [(ngModel)]="bsModalRef.content.balance" type="text" class="form-control" id="name" placeholder="Account balance">
-        </div>
-      </div>
-    </div>
-    <!--/.row-->
-    <div class="row">
-      <div class="form-group col-sm-12">
-        <label for="type">Type</label>
-        <select [(ngModel)]="bsModalRef.content.type" class="form-control" id="type">
-          <option *ngFor="let key of accountTypeKeys" [value]="key" [label]="accountTypes[key]"></option>
-        </select>
-      </div>
-    </div>
-    <!--/.row-->
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
-    <button type="button" class="btn btn-primary" (click)="editAccount(bsModalRef.content)">Save changes</button>
-  </div>
-</ng-template>
-
 <ng-template #editCategoryModal>
   <div class="modal-header">
     <h4 class="modal-title">Edit a category</h4>
@@ -179,6 +129,37 @@
         <div class="form-group">
           <label for="name">Name</label>
           <input [(ngModel)]="bsModalRef.content.name" type="text" class="form-control" id="name" placeholder="Category name">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+      <div class="form-group">
+        <label class="col-md-3" for="recurring">Recurring</label>
+        <div class="col-md-9">
+          <label class="switch switch-default switch-primary">
+            <input [(ngModel)]="bsModalRef.content.recurring" id="recurring" type="checkbox" class="switch-input">
+            <span class="switch-label"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div *ngIf="bsModalRef.content.recurring" class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="recurringDate">Date of first occurrence</label>
+          <input [(ngModel)]="bsModalRef.content.recurringDate" type="text" class="form-control" id="recurringDate" placeholder="Date of first occurrence">
+        </div>
+      </div>
+    </div>
+    <!--/.row-->
+    <div *ngIf="bsModalRef.content.recurring" class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="recurringValue">Recurring value</label>
+          <input [(ngModel)]="bsModalRef.content.recurringValue" type="text" class="form-control" id="recurringValue" placeholder="Recurring value">
         </div>
       </div>
     </div>

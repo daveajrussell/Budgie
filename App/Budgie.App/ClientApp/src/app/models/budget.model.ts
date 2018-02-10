@@ -17,10 +17,10 @@ export class Budget {
 }
 
 export class Transaction {
-    public readonly id: number = 0;
-    public date: Date = new Date();
-    public amount: number = 0;
-    public notes: string = '';
+    public readonly id: number;
+    public date: Date;
+    public amount: number;
+    public notes: string;
     public readonly category: Category = new Category();
 }
 
