@@ -24,8 +24,8 @@ export const routes: Routes = [
         loadChildren: './views/dashboard/dashboard.module#DashboardModule'
       },
       {
-        path: 'accounts',
-        loadChildren: './views/accounts/accounts.module#AccountsModule'
+        path: 'categories',
+        loadChildren: './views/categories/categories.module#CategoriesModule'
       },
       {
         path: 'budgets',

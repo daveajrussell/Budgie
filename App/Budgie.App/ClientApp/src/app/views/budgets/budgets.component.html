@@ -112,6 +112,38 @@
               </table>
             </tbody>
           </table>
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="2">Savings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <table class="table table-sm" *ngFor="let item of budget.savings">
+                <thead>
+                  <tr>
+                    <th colspan="2">
+                      {{item.name}}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Budgeted</td>
+                    <td>£{{item.target}}</td>
+                  </tr>
+                  <tr>
+                    <td>Actual</td>
+                    <td>£{{item.actual}}</td>
+                  </tr>
+                  <tr>
+                    <td>Remaining</td>
+                    <td>£{{item.budgeted - item.actual}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

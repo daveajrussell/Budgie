@@ -2,21 +2,22 @@
 
 namespace Budgie.Core
 {
-    public class Budget
+    public class Budget : BaseEntity
     {
-        public int Id { get; set; }
+        public int Month { get; set; }
 
-        public string Name { get; set; }
-
-        public string Description { get; set; }
+        public int Year { get; set; }
 
         public int UserId { get; set; }
+
         public virtual User User { get; set; }
 
-        public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<Income> Incomes { get; set; }
 
-        public virtual ICollection<Category> Categories { get; set; }
+        public virtual ICollection<Outgoing> Outgoings { get; set; }
 
-        public virtual ICollection<Sheet> Sheets { get; set; }
+        public virtual ICollection<Saving> Savings { get; set; }
+
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

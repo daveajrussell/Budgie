@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Budgie.Core;
 using Budgie.Data.Abstractions;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Budgie.Data.Services
 {
@@ -14,19 +15,14 @@ namespace Budgie.Data.Services
 
         /* Core */
         public IRepository<User> Users => GetStandardRepo<User>();
-        public IRepository<Account> Accounts => GetStandardRepo<Account>();
         public IRepository<Budget> Budgets => GetStandardRepo<Budget>();
         public IRepository<Category> Categories => GetStandardRepo<Category>();
-        public IRepository<Sheet> Sheets => GetStandardRepo<Sheet>();
-        public IRepository<SubCategory> SubCategories => GetStandardRepo<SubCategory>();
         public IRepository<Transaction> Transactions => GetStandardRepo<Transaction>();
-        public IRepository<Role> Roles => GetStandardRepo<Role>();
 
-        public Uow(IRepositoryProvider repositoryProvider, IDesignTimeDbContextFactory<BudgieDbContext> context)
+        public Uow(IRepositoryProvider repositoryProvider, BudgieDbContext budgieDbContext)
         {
             RepositoryProvider = repositoryProvider;
-
-            DbContext = context.CreateDbContext(new string[] { });
+            DbContext = budgieDbContext;
         }
 
         protected T GetRepo<T>() where T : class

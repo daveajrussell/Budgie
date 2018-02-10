@@ -3,46 +3,6 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
-          Accounts
-        </div>
-        <div class="card-body">
-          <div class="form-group row">
-            <div class="col-md-12">
-              <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" (click)="openModal(addAccountModal, account)">
-                Add an account
-              </button>
-            </div>
-          </div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Date added</th>
-                <th>Type</th>
-                <th>Balance</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let account of accounts">
-                <td>
-                  <a data-toggle="modal" (click)="openModal(editAccountModal, account)">{{account.name}}</a>
-                </td>
-                <td>{{account.date}}</td>
-                <td>{{accountTypes[account.type]}}</td>
-                <td>{{account.balance}}</td>
-                <td>
-                  <span class="badge" [class.active]="account.status === 1" [class.inactive]="account.status === 2">{{accountStatuses[account.status]}}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
           Categories
         </div>
         <div class="card-body">

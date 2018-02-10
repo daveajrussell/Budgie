@@ -7,11 +7,11 @@ namespace Budgie.Data.Abstractions
     {
         /* Core */
         DbSet<User> Users { get; set; }
-        DbSet<Account> Accounts { get; set; }
         DbSet<Budget> Budgets { get; set; }
+        DbSet<Income> Incomes { get; set; }
+        DbSet<Outgoing> Outgoings { get; set; }
+        DbSet<Saving> Savings { get; set; }
         DbSet<Category> Categories { get; set; }
-        DbSet<Sheet> Sheets { get; set; }
-        DbSet<SubCategory> SubCategories { get; set; }
         DbSet<Transaction> Transactions { get; set; }
         DbSet<Role> Roles { get; set; }
     }

@@ -12,7 +12,7 @@ namespace Budgie.Data.Factories
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json", true)
                 .Build();
 
             var builder = new DbContextOptionsBuilder<BudgieDbContext>();

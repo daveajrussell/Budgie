@@ -22,12 +22,14 @@ namespace Budgie.Framework.Security
             if (_user == null && _context.User.Identity.IsAuthenticated)
             {
                 string userId = _context.User.FindFirstValue(BudgieClaimTypes.SubjectId);
-                string userType = _context.User.FindFirstValue(ClaimTypes.Role);
 
-                return _user;
+                _user = new User
+                {
+                    Id = int.Parse(userId)
+                };
             }
 
-            return _user;
+            return await Task.FromResult(_user);
         }
     }
 }

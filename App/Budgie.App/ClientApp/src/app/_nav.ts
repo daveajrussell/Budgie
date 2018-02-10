@@ -5,8 +5,8 @@ export const navigation = [
     icon: 'icon-speedometer'
   },
   {
-    name: 'Accounts',
-    url: '/accounts',
+    name: 'Categories',
+    url: '/categories',
     icon: 'icon-speedometer',
   },
   {

@@ -59,14 +59,12 @@ const APP_DIRECTIVES = [
 
 // Import services
 import {
-  AccountsService,
   AuthService,
   BudgetService,
   CategoryService
 } from './services';
 
 const APP_SERVICES = [
-  AccountsService,
   AuthService,
   BudgetService,
   CategoryService

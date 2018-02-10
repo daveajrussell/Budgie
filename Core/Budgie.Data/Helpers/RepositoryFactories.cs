@@ -8,14 +8,14 @@ namespace Budgie.Data.Helpers
     {
         public RepositoryFactories()
         {
-            _repositoryFactories = GetLightningAppFactories();
+            _repositoryFactories = GetBudgieFactories();
         }
 
-        private IDictionary<Type, Func<DbContext, object>> GetLightningAppFactories()
+        private IDictionary<Type, Func<DbContext, object>> GetBudgieFactories()
         {
             return new Dictionary<Type, Func<DbContext, object>>
             {
-                //{ typeof(ITweetRepository), dbContext => new TweetRepository(dbContext) }
+                //{ typeof(IRepository), dbContext => new ConcreteRepository(dbContext) }
             };
         }
 

@@ -3,16 +3,16 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-import { AccountsComponent } from './accounts.component';
-import { AccountsRoutingModule } from './accounts-routing.module';
+import { CategoriesComponent } from './categories.component';
+import { CategoriesRoutingModule } from './categories-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    AccountsRoutingModule,
+    CategoriesRoutingModule,
     ModalModule.forRoot()
   ],
-  declarations: [AccountsComponent]
+  declarations: [CategoriesComponent]
 })
-export class AccountsModule { }
+export class CategoriesModule { }

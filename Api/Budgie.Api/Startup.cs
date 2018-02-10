@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Budgie.Core;
 
 namespace Budgie.Api
 {
@@ -31,6 +32,20 @@ namespace Budgie.Api
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+        }
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddMvc()
+                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddDbContext<BudgieDbContext>(options =>
+                options.UseInMemoryDatabase("budgie"));
+
+            services.AddDevelopmentDataLayer();
+
+            services.AddTransient<ITokenResolverMiddleware, TokenResolverMiddleware>();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -74,13 +89,43 @@ namespace Budgie.Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            var options = new RewriteOptions()
-                .AddRedirectToHttps();
+            if (env.IsDevelopment())
+            {
+                using (var serviceScope = app.ApplicationServices.CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetService<BudgieDbContext>();
+                    AddTestData(context);
+                }
+            }
 
-            app.UseRewriter(options);
-            app.UseAuthentication();
+            if (env.IsProduction())
+            {
+                var options = new RewriteOptions()
+                                .AddRedirectToHttps();
+
+                app.UseRewriter(options);
+                app.UseAuthentication();
+                app.UseCors("SiteCorsPolicy");
+            }
+
             app.UseMvc();
-            app.UseCors("SiteCorsPolicy");
+        }
+
+        private static void AddTestData(BudgieDbContext context)
+        {
+            context.Users.Add(new User
+            {
+                Id = 1
+            });
+
+            context.Budgets.Add(new Budget
+            {
+                UserId = 1,
+                Month = 2,
+                Year = 2018
+            });
+
+            context.SaveChanges();
         }
     }
 }

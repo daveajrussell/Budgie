@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 
 namespace Budgie.Core
 {
-    public class Transaction : BaseEntity
+    public class Saving : BaseEntity
     {
-        public double Amount { get; set; }
-
         public DateTime Date { get; set; }
 
         public bool Resolved { get; set; }
 
-        public string Notes { get; set; }
+        public decimal Total { get; set; }
 
         public int CategoryId { get; set; }
 

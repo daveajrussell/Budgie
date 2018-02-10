@@ -15,5 +15,12 @@ namespace Budgie.Data.Helpers
             services.AddTransient<IRepositoryProvider, RepositoryProvider>();
             services.AddTransient<IUow, Uow>();
         }
+
+        public static void AddDevelopmentDataLayer(this IServiceCollection services)
+        {
+            services.AddScoped<RepositoryFactories>();
+            services.AddTransient<IRepositoryProvider, RepositoryProvider>();
+            services.AddTransient<IUow, Uow>();
+        }
     }
 }

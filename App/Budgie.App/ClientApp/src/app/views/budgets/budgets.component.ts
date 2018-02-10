@@ -62,7 +62,6 @@ export class BudgetsComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>, content: Transaction) {
-    console.log(content);
     this.bsModalRef = this.modalService.show(template);
     this.bsModalRef.content = JSON.parse(JSON.stringify(content));
   }
@@ -121,7 +120,7 @@ export class BudgetsComponent implements OnInit {
   private recalculate() {
     this.budget.outgoings.forEach(x => x.actual = 0);
     this.budget.transactions.forEach((x) => {
-      let outgoing = this.budget.outgoings.find(y => y.category.id == x.categoryId);
+      let outgoing = this.budget.outgoings.find(y => y.category.id == x.category.id);
       outgoing.actual += x.amount;
     });
   }
