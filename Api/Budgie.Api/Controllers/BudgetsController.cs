@@ -106,21 +106,21 @@ namespace Budgie.Api.Controllers
         [Route("{year:int}/{month:int}/add")]
         public async Task<IActionResult> AddTransaction(int year, int month, [FromBody] ApiTransaction model)
         {
-            return null;
+            return await Task.FromResult(new JsonResult(0));
         }
 
         [HttpPatch]
         [Route("{year:int}/{month:int}/edit")]
         public async Task<IActionResult> EditTransaction(int year, int month, [FromBody] ApiTransaction model)
         {
-            return null;
+            return await Task.FromResult(new JsonResult(0));
         }
 
         [HttpDelete]
         [Route("{year:int}/{month:int}/id:int")]
         public async Task<IActionResult> DeleteTransaction(int year, int month, int id)
         {
-            return null;
+            return await Task.FromResult(new JsonResult(0));
         }
     }
 }
