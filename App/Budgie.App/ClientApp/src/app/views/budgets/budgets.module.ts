@@ -7,7 +7,8 @@ import { BudgetsComponent } from './budgets.component';
 import { BudgetsRoutingModule } from './budgets-routing.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { OutgoingTypePipe } from '../../pipes';
+import { PipeModule } from '../../pipes/pipes.module';
+import { InlineEditorModule } from '@qontu/ngx-inline-editor';
 
 @NgModule({
   imports: [
@@ -18,13 +19,11 @@ import { OutgoingTypePipe } from '../../pipes';
     CollapseModule,
     BsDatepickerModule.forRoot(),
     BsDropdownModule.forRoot(),
+    PipeModule,
+    InlineEditorModule
   ],
   declarations: [
-    BudgetsComponent,
-    OutgoingTypePipe
-  ],
-  providers: [
-    OutgoingTypePipe
+    BudgetsComponent
   ]
 })
 export class BudgetsModule {

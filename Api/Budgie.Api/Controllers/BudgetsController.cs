@@ -92,6 +92,24 @@ namespace Budgie.Api.Controllers
                 budget.Outgoings = outgoings;
                 budget.Savings = savings;
 
+                var transactions = categories
+                    .Where(x => x.Recurring)
+                    .Select(x => new Transaction
+                    {
+                        BudgetId = budget.Id,
+                        Budget = budget,
+                        UserId = Token.UserId,
+                        CategoryId = x.Id,
+                        Category = x,
+                        Amount = x.RecurringValue.Value,
+                        Date = x.RecurringDate.Value
+                    })
+                    .ToList();
+
+                budget.Transactions = transactions;
+
+                await _uow.Transactions.AddRangeAsync(transactions);
+
                 await _uow.Budgets.AddAsync(budget);
                 await _uow.CommitAsync();
             }

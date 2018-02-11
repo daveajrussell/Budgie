@@ -70,6 +70,17 @@ const APP_SERVICES = [
   CategoryService
 ]
 
+// Import pipes
+import {
+  DateFormatPipe,
+  OutgoingTypePipe
+} from './pipes'
+
+const APP_PIPES = [
+  DateFormatPipe,
+  OutgoingTypePipe
+]
+
 // Import OIDC
 import {
   AuthModule,
@@ -84,6 +95,7 @@ import { AppRoutingModule } from './app.routing';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { InlineEditorModule } from '@qontu/ngx-inline-editor';
 
 // export function loadConfig(oidcConfigService: OidcConfigService) {
 //   return () => oidcConfigService.load_using_stsServer(environment.identityServerBaseUri);
@@ -97,7 +109,8 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     AppRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    InlineEditorModule
   ],
   declarations: [
     AppComponent,

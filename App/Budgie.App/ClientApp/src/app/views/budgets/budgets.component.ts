@@ -136,6 +136,11 @@ export class BudgetsComponent implements OnInit {
       .subscribe(categories => this.categories = categories);
   }
 
+  protected saveEditable($event: any) {
+    // call service to update outgoing actual spent
+    this.recalculate();
+  }
+
   private setDate = () => {
     this.month = this.currentDate.format('MMMM');
     this.monthNumber = this.currentDate.month();

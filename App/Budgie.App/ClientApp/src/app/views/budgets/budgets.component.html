@@ -98,7 +98,9 @@
                 <tbody>
                   <tr>
                     <td>Budgeted</td>
-                    <td class="text-right">£{{item.budgeted}}</td>
+                    <td class="text-right">
+                      £<inline-editor type="text" [(ngModel)]="item.budgeted" (onSave)="saveEditable($event)" name="budgeted" size="8"></inline-editor>
+                    </td>
                   </tr>
                   <tr>
                     <td>Actual</td>
@@ -154,8 +156,8 @@
             </thead>
             <tbody>
               <tr *ngFor="let transaction of budget.transactions" (click)="openModal(editTransactionModal, transaction)">
-                <td>{{transaction.date}}</td>
-                <td>{{transaction.category}}</td>
+                <td>{{transaction.date | dateFormat}}</td>
+                <td>{{transaction.category.name}}</td>
                 <td>£{{transaction.amount}}</td>
                 <td>{{transaction.notes}}</td>
               </tr>

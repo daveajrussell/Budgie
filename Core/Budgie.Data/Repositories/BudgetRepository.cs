@@ -18,6 +18,7 @@ public class BudgetRepository : EFRepository<Budget>, IBudgetRepository
             .Include(x => x.Incomes).ThenInclude(y => y.Category)
             .Include(x => x.Outgoings).ThenInclude(y => y.Category)
             .Include(x => x.Savings).ThenInclude(y => y.Category)
+            .Include(x => x.Transactions)
             .Where(x => x.UserId == UserId)
             .Where(x => x.Year == year)
             .Where(x => x.Month == month)
