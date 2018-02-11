@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Budgie.Data.Helpers
@@ -11,31 +12,33 @@ namespace Budgie.Data.Helpers
             _repositoryFactories = GetBudgieFactories();
         }
 
-        private IDictionary<Type, Func<DbContext, object>> GetBudgieFactories()
+        private IDictionary<Type, Func<DbContext, HttpContext, object>> GetBudgieFactories()
         {
-            return new Dictionary<Type, Func<DbContext, object>>
-            {
-                { typeof(IBudgetRepository), dbContext => new BudgetRepository(dbContext) }
+            return new Dictionary<Type, Func<DbContext, HttpContext, object>>
+            { 
+                { typeof(IBudgetRepository), (dbContext, httpContext) => new BudgetRepository(dbContext, httpContext) },
+                { typeof(ICategoryRepository), (dbContext, httpContext) => new CategoryRepository(dbContext, httpContext) },
+                { typeof(ITransactionRepository), (dbContext, httpContext) => new TransactionRepository(dbContext, httpContext) }
             };
         }
 
-        private readonly IDictionary<Type, Func<DbContext, object>> _repositoryFactories;
+        private readonly IDictionary<Type, Func<DbContext, HttpContext, object>> _repositoryFactories;
 
-        public Func<DbContext, object> GetRepositoryFactory<T>()
+        public Func<DbContext, HttpContext, object> GetRepositoryFactory<T>()
         {
-            _repositoryFactories.TryGetValue(typeof(T), out Func<DbContext, object> factory);
+            _repositoryFactories.TryGetValue(typeof(T), out Func<DbContext, HttpContext, object> factory);
 
             return factory;
         }
 
-        public Func<DbContext, object> GetRepositoryFactoryForEntityType<T>() where T : class
+        public Func<DbContext, HttpContext, object> GetRepositoryFactoryForEntityType<T>() where T : class
         {
             return GetRepositoryFactory<T>() ?? DefaultEntityRepositoryFactory<T>();
         }
 
-        protected virtual Func<DbContext, object> DefaultEntityRepositoryFactory<T>() where T : class
+        protected virtual Func<DbContext, HttpContext, object> DefaultEntityRepositoryFactory<T>() where T : class
         {
-            return dbContext => new EFRepository<T>(dbContext);
+            return (dbContext, httpContext) => new EFRepository<T>(dbContext, httpContext);
         }
     }
 }

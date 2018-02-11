@@ -4,7 +4,7 @@ using Budgie.Core.Enums;
 
 namespace Budgie.Core
 {
-    public class Category : BaseEntity
+    public class Category : BaseEntity, IUserEntity
     {
         public string Name { get; set; }
 

@@ -59,6 +59,7 @@ export class BudgetsComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>, content: Transaction) {
+    console.log(content);
     this.bsModalRef = this.modalService.show(template);
     this.bsModalRef.content = JSON.parse(JSON.stringify(content));
   }
@@ -127,7 +128,7 @@ export class BudgetsComponent implements OnInit {
       .getBudget(this.yearNumber, this.monthNumber + 1)
       .subscribe((budget) => {
         this.budget = budget;
-        console.log(budget);
+        this.transaction = new Transaction(budget);
       });
 
     this.categoryService

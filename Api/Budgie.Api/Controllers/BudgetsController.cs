@@ -1,15 +1,15 @@
 using System;
-using System.Collections.Generic;
+using AutoMapper;
+using Budgie.Core;
+using Budgie.Core.Contracts.Security;
+using Budgie.Core.Enums;
+using Budgie.Data.Abstractions;
 using Budgie.Framework.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Budgie.Data.Abstractions;
+using System.Collections.Generic;
 using System.Linq;
-using Budgie.Core;
-using AutoMapper;
 using System.Threading.Tasks;
-using Budgie.Framework.Facade.Middlewares;
-using Budgie.Core.Enums;
 
 namespace Budgie.Api.Controllers
 {
@@ -19,8 +19,7 @@ namespace Budgie.Api.Controllers
         private readonly IUow _uow;
         private readonly IMapper _mapper;
 
-        public BudgetsController(IUow uow, IMapper mapper, ITokenResolverMiddleware tokenResolver)
-        : base(tokenResolver)
+        public BudgetsController(IUow uow, IMapper mapper, ITokenResolverMiddleware tokenResolver) : base(tokenResolver)
         {
             _uow = uow;
             _mapper = mapper;
@@ -30,7 +29,7 @@ namespace Budgie.Api.Controllers
         [Route("{year:int}/{month:int}")]
         public async Task<IActionResult> GetBudget(int year, int month)
         {
-            var budget = await _uow.Budgets.GetBudget(Token.UserId, year, month);
+            var budget = await _uow.Budgets.GetBudget(year, month);
 
             if (budget == null)
             {
@@ -43,49 +42,49 @@ namespace Budgie.Api.Controllers
                 };
 
                 var categories = _uow.Categories
-                                     .GetAll()
-                                     .Where(x => x.UserId == Token.UserId)
-                                     .ToList();
+                    .GetAll()
+                    .Where(x => x.UserId == Token.UserId)
+                    .ToList();
 
                 var incomes = categories
-                                .Where(x => x.Type == CategoryType.Income)
-                                .Select(x => new Income
-                                {
-                                    BudgetId = budget.Id,
-                                    DateAdded = DateTime.UtcNow,
-                                    CategoryId = x.Id,
-                                    Total = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
-                                    Date = x.RecurringDate
-                                })
-                                .ToList();
+                    .Where(x => x.Type == CategoryType.Income)
+                    .Select(x => new Income
+                    {
+                        BudgetId = budget.Id,
+                        DateAdded = DateTime.UtcNow,
+                        CategoryId = x.Id,
+                        Total = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
+                        Date = x.RecurringDate
+                    })
+                    .ToList();
 
                 await _uow.Incomes.AddRangeAsync(incomes);
 
                 var outgoings = categories
-                                    .Where(x => x.Type == CategoryType.Dedicated || x.Type == CategoryType.Variable)
-                                    .Select(x => new Outgoing
-                                    {
-                                        BudgetId = budget.Id,
-                                        DateAdded = DateTime.UtcNow,
-                                        CategoryId = x.Id,
-                                        Budgeted = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
-                                        Date = x.RecurringDate
-                                    })
-                                    .ToList();
+                    .Where(x => x.Type == CategoryType.Dedicated || x.Type == CategoryType.Variable)
+                    .Select(x => new Outgoing
+                    {
+                        BudgetId = budget.Id,
+                        DateAdded = DateTime.UtcNow,
+                        CategoryId = x.Id,
+                        Budgeted = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
+                        Date = x.RecurringDate
+                    })
+                    .ToList();
 
                 await _uow.Outgoings.AddRangeAsync(outgoings);
 
                 var savings = categories
-                                .Where(x => x.Type == CategoryType.Savings)
-                                .Select(x => new Saving
-                                {
-                                    BudgetId = budget.Id,
-                                    DateAdded = DateTime.UtcNow,
-                                    CategoryId = x.Id,
-                                    Total = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
-                                    Date = x.RecurringDate
-                                })
-                                .ToList();
+                    .Where(x => x.Type == CategoryType.Savings)
+                    .Select(x => new Saving
+                    {
+                        BudgetId = budget.Id,
+                        DateAdded = DateTime.UtcNow,
+                        CategoryId = x.Id,
+                        Total = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
+                        Date = x.RecurringDate
+                    })
+                    .ToList();
 
                 await _uow.Savings.AddRangeAsync(savings);
 
@@ -106,15 +105,20 @@ namespace Budgie.Api.Controllers
         [Route("add")]
         public async Task<IActionResult> AddTransaction([FromBody] ApiTransaction model)
         {
+            var budget = await _uow.Budgets.GetByIdAsync(model.Budget.Id);
+            var category = await _uow.Categories.GetByIdAsync(model.Category.Id);
             var transaction = new Transaction
             {
                 DateAdded = DateTime.UtcNow,
-                BudgetId = model.Budget.Id,
-                CategoryId = model.Category.Id,
+                BudgetId = budget.Id,
+                Budget = budget,
+                CategoryId = category.Id,
+                Category = category,
                 Date = model.Date,
                 Amount = model.Amount,
                 Resolved = model.Resolved,
-                Notes = model.Notes
+                Notes = model.Notes,
+                UserId = Token.UserId
             };
 
             await _uow.Transactions.AddAsync(transaction);
@@ -133,13 +137,14 @@ namespace Budgie.Api.Controllers
         public async Task<IActionResult> EditTransaction([FromBody] ApiTransaction model)
         {
             var transaction = await _uow.Transactions.GetByIdAsync(model.Id);
+            var category = await _uow.Categories.GetByIdAsync(model.Category.Id);
 
             if (transaction != null)
             {
                 transaction.DateModified = DateTime.UtcNow;
                 transaction.Date = model.Date;
-                transaction.BudgetId = model.Budget.Id;
-                transaction.CategoryId = model.Category.Id;
+                transaction.CategoryId = category.Id;
+                transaction.Category = category;
                 transaction.Amount = model.Amount;
                 transaction.Resolved = model.Resolved;
                 transaction.Notes = model.Notes;
@@ -162,9 +167,9 @@ namespace Budgie.Api.Controllers
             if (model.Category.Type == CategoryType.Income)
             {
                 var income = _uow.Incomes.GetAll()
-                .Where(x => x.BudgetId == model.Budget.Id)
-                .Where(x => x.CategoryId == model.Category.Id)
-                .FirstOrDefault();
+                    .Where(x => x.BudgetId == model.Budget.Id)
+                    .Where(x => x.CategoryId == model.Category.Id)
+                    .FirstOrDefault();
 
                 if (income != null)
                 {
@@ -177,9 +182,9 @@ namespace Budgie.Api.Controllers
             else if (model.Category.Type == CategoryType.Dedicated || model.Category.Type == CategoryType.Variable)
             {
                 var outgoing = _uow.Outgoings.GetAll()
-                .Where(x => x.BudgetId == model.Budget.Id)
-                .Where(x => x.CategoryId == model.Category.Id)
-                .FirstOrDefault();
+                    .Where(x => x.BudgetId == model.Budget.Id)
+                    .Where(x => x.CategoryId == model.Category.Id)
+                    .FirstOrDefault();
 
                 if (outgoing != null)
                 {
@@ -194,9 +199,9 @@ namespace Budgie.Api.Controllers
             else if (model.Category.Type == CategoryType.Savings)
             {
                 var saving = _uow.Savings.GetAll()
-                .Where(x => x.BudgetId == model.Budget.Id)
-                .Where(x => x.CategoryId == model.Category.Id)
-                .FirstOrDefault();
+                    .Where(x => x.BudgetId == model.Budget.Id)
+                    .Where(x => x.CategoryId == model.Category.Id)
+                    .FirstOrDefault();
 
                 if (saving != null)
                 {

@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
+using AutoMapper;
+using Budgie.Core;
+using Budgie.Core.Contracts.Security;
+using Budgie.Data.Abstractions;
 using Budgie.Framework.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Budgie.Data.Abstractions;
+using System.Collections.Generic;
 using System.Linq;
-using Budgie.Core;
-using AutoMapper;
 using System.Threading.Tasks;
-using Budgie.Framework.Facade.Middlewares;
 
 namespace Budgie.Api.Controllers
 {
@@ -18,8 +18,7 @@ namespace Budgie.Api.Controllers
         private readonly IUow _uow;
         private readonly IMapper _mapper;
 
-        public CategoriesController(IUow uow, IMapper mapper, ITokenResolverMiddleware tokenResolver)
-        : base(tokenResolver)
+        public CategoriesController(IUow uow, IMapper mapper, ITokenResolverMiddleware tokenResolver) : base(tokenResolver)
         {
             _uow = uow;
             _mapper = mapper;
@@ -28,7 +27,7 @@ namespace Budgie.Api.Controllers
         [HttpGet]
         public IActionResult GetCategories()
         {
-            var categories = _uow.Categories.GetAll().Where(x => x.UserId == Token.UserId).ToList();
+            var categories = _uow.Categories.GetAll().ToList();
             var model = _mapper.Map<IList<Category>, IEnumerable<ApiCategory>>(categories);
 
             return new JsonResult(model);

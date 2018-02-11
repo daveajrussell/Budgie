@@ -2,7 +2,7 @@
 
 namespace Budgie.Core
 {
-    public class Budget : BaseEntity
+    public class Budget : BaseEntity, IUserEntity
     {
         public int Month { get; set; }
 

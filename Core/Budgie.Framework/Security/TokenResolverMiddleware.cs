@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Budgie.Core;
+﻿using Budgie.Core;
 using Budgie.Core.Constants;
-using Budgie.Framework.Facade.Middlewares;
+using Budgie.Core.Contracts.Security;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Budgie.Framework.Security
 {

@@ -1,7 +1,7 @@
 ﻿using Budgie.Core;
 using System.Threading.Tasks;
 
-namespace Budgie.Framework.Facade.Middlewares
+namespace Budgie.Core.Contracts.Security
 {
     public interface ITokenResolverMiddleware
     {

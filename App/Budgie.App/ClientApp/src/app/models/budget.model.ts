@@ -21,7 +21,12 @@ export class Transaction {
     public date: Date;
     public amount: number;
     public notes: string;
+    public readonly budget: Budget = new Budget();
     public readonly category: Category = new Category();
+
+    constructor(budget: Budget = new Budget()) {
+        this.budget = budget;
+    }
 }
 
 export class Income {

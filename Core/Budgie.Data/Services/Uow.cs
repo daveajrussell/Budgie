@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Budgie.Core;
 using Budgie.Data.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace Budgie.Data.Services
 {
@@ -11,31 +12,34 @@ namespace Budgie.Data.Services
     {
         private BudgieDbContext DbContext { get; }
 
+        private HttpContext HttpContext { get; }
+
         protected IRepositoryProvider RepositoryProvider { get; set; }
 
         /* Core */
         public IRepository<User> Users => GetStandardRepo<User>();
         public IBudgetRepository Budgets => GetRepo<IBudgetRepository>();
-        public IRepository<Category> Categories => GetStandardRepo<Category>();
-        public IRepository<Transaction> Transactions => GetStandardRepo<Transaction>();
+        public ICategoryRepository Categories => GetRepo<ICategoryRepository>();
+        public ITransactionRepository Transactions => GetRepo<ITransactionRepository>();
         public IRepository<Income> Incomes => GetStandardRepo<Income>();
         public IRepository<Outgoing> Outgoings => GetStandardRepo<Outgoing>();
         public IRepository<Saving> Savings => GetStandardRepo<Saving>();
 
-        public Uow(IRepositoryProvider repositoryProvider, BudgieDbContext budgieDbContext)
+        public Uow(IRepositoryProvider repositoryProvider, BudgieDbContext budgieDbContext, IHttpContextAccessor httpContextAccessor)
         {
             RepositoryProvider = repositoryProvider;
             DbContext = budgieDbContext;
+            HttpContext = httpContextAccessor.HttpContext;
         }
 
         protected T GetRepo<T>() where T : class
         {
-            return RepositoryProvider.GetRepository<T>(DbContext);
+            return RepositoryProvider.GetRepository<T>(DbContext, HttpContext);
         }
 
         protected IRepository<T> GetStandardRepo<T>() where T : class
         {
-            return RepositoryProvider.GetRepositoryForEntityType<T>(DbContext);
+            return RepositoryProvider.GetRepositoryForEntityType<T>(DbContext, HttpContext);
         }
 
         public void Commit()

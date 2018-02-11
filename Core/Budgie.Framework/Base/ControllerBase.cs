@@ -1,6 +1,5 @@
 ﻿using Budgie.Core;
-using Budgie.Framework.Facade;
-using Budgie.Framework.Facade.Middlewares;
+using Budgie.Core.Contracts.Security;
 using Budgie.Framework.Models;
 using Budgie.Framework.Security;
 using Microsoft.AspNetCore.Http;
@@ -28,8 +27,6 @@ namespace Budgie.Framework.Base
             }
         }
 
-        public BaseController(IHttpContextAccessor httpContextAccessor)
-        {
-        }
+        public BaseController(IHttpContextAccessor httpContextAccessor) { }
     }
 }

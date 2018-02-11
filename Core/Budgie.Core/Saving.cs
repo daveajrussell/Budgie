@@ -2,7 +2,7 @@ using System;
 
 namespace Budgie.Core
 {
-    public class Saving : BaseEntity
+    public class Saving : BaseEntity, IUserEntity
     {
         public DateTime? Date { get; set; }
 
@@ -17,5 +17,7 @@ namespace Budgie.Core
         public int BudgetId { get; set; }
 
         public virtual Budget Budget { get; set; }
+        public virtual User User { get; set; }
+        public int UserId { get; set; }
     }
 }

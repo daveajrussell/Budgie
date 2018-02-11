@@ -1,6 +1,6 @@
 using System;
 using Budgie.Core;
-using Budgie.Framework.Facade.Middlewares;
+using Budgie.Core.Contracts.Security;
 using Budgie.Framework.Models;
 using Budgie.Framework.Security;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +13,7 @@ namespace Budgie.Framework.Base
     public abstract class ApiControllerBase
     {
         private readonly ITokenResolverMiddleware _tokenResolver;
+
         public ApiControllerBase(ITokenResolverMiddleware tokenResolver)
         {
             _tokenResolver = tokenResolver;

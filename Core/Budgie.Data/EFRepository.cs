@@ -1,118 +1,135 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Budgie.Core.Contracts.Security;
 using Budgie.Data.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Budgie.Data
 {
     public class EFRepository<T> : IRepository<T> where T : class
-	{
-		protected DbContext DbContext { get; set; }
+    {
+        protected DbContext DbContext { get; set; }
 
-		protected DbSet<T> DbSet { get; set; }
+        private HttpContext HttpContext { get; set; }
 
-		public EFRepository(DbContext dbContext)
-		{
-			DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-			DbSet = DbContext.Set<T>();
-		}
+        protected int UserId { get; set; }
 
-		public virtual IQueryable<T> GetAll()
-		{
-			return DbSet;
-		}
+        protected DbSet<T> DbSet { get; set; }
 
-		public virtual void Add(T entity)
-		{
-			EntityEntry dbEntityEntry = DbContext.Entry(entity);
+        public EFRepository(DbContext dbContext, HttpContext httpContext)
+        {
+            DbContext = dbContext ??
+                throw new ArgumentNullException(nameof(dbContext));
 
-			if (dbEntityEntry.State != EntityState.Detached)
-			{
-				dbEntityEntry.State = EntityState.Added;
-			}
-			else
-			{
-				DbSet.Add(entity);
-			}
-		}
+            HttpContext = httpContext ??
+                throw new ArgumentNullException(nameof(httpContext));
 
-		public virtual async Task AddRangeAsync(IEnumerable<T> entities)
-		{
-			foreach (var entity in entities)
-			{
-				EntityEntry dbEntityEntry = DbContext.Entry(entity);
+            var currentUser = HttpContext.RequestServices.GetRequiredService<ITokenResolverMiddleware>().ResolveAsync().Result;
+            UserId = currentUser.Id;
 
-				if (dbEntityEntry.State != EntityState.Detached)
-				{
-					dbEntityEntry.State = EntityState.Added;
-				}
-			}
+            DbSet = DbContext.Set<T>();
+        }
 
-			await DbSet.AddRangeAsync(entities);
-		}
+        public virtual IQueryable<T> GetAll()
+        {
+            return DbSet;
+        }
 
-		public virtual void Update(T entity)
-		{
-			EntityEntry dbEntityEntry = DbContext.Entry(entity);
+        public virtual void Add(T entity)
+        {
+            EntityEntry dbEntityEntry = DbContext.Entry(entity);
 
-			if (dbEntityEntry.State == EntityState.Detached)
-			{
-				DbSet.Attach(entity);
-			}
+            if (dbEntityEntry.State != EntityState.Detached)
+            {
+                dbEntityEntry.State = EntityState.Added;
+            }
+            else
+            {
+                DbSet.Add(entity);
+            }
+        }
 
-			dbEntityEntry.State = EntityState.Modified;
-		}
+        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                EntityEntry dbEntityEntry = DbContext.Entry(entity);
 
-		public virtual void Delete(T entity)
-		{
-			EntityEntry dbEntityEntry = DbContext.Entry(entity);
+                if (dbEntityEntry.State != EntityState.Detached)
+                {
+                    dbEntityEntry.State = EntityState.Added;
+                }
+            }
 
-			if (dbEntityEntry.State != EntityState.Deleted)
-			{
-				dbEntityEntry.State = EntityState.Deleted;
-			}
-			else
-			{
-				DbSet.Attach(entity);
-				DbSet.Remove(entity);
-			}
-		}
+            await DbSet.AddRangeAsync(entities);
+        }
 
-		public virtual T GetById(int id)
-		{
-			return DbSet.Find(id);
-		}
+        public virtual void Update(T entity)
+        {
+            EntityEntry dbEntityEntry = DbContext.Entry(entity);
 
-		public virtual void Delete(int id)
-		{
-			var entity = GetById(id);
+            if (dbEntityEntry.State == EntityState.Detached)
+            {
+                DbSet.Attach(entity);
+            }
 
-			if (entity == null)
-				return;
+            dbEntityEntry.State = EntityState.Modified;
+        }
 
-			Delete(entity);
-		}
+        public virtual void Delete(T entity)
+        {
+            EntityEntry dbEntityEntry = DbContext.Entry(entity);
 
-		public virtual async Task<T> GetByIdAsync(int id)
-		{
-			return await DbSet.FindAsync(id);
-		}
+            if (dbEntityEntry.State != EntityState.Deleted)
+            {
+                dbEntityEntry.State = EntityState.Deleted;
+            }
+            else
+            {
+                DbSet.Attach(entity);
+                DbSet.Remove(entity);
+            }
+        }
 
-		public virtual async Task AddAsync(T entity)
-		{
-			var dbEntityEntry = DbContext.Entry(entity);
+        public virtual T GetById(int id)
+        {
+            return DbSet.Find(id);
+        }
 
-			if (dbEntityEntry.State != EntityState.Detached)
-			{
-				dbEntityEntry.State = EntityState.Added;
-			}
-			else
-			{
-				await DbSet.AddAsync(entity);
-			}
-		}
-	}
+        public virtual void Delete(int id)
+        {
+            var entity = GetById(id);
+
+            if (entity == null)
+                return;
+
+            Delete(entity);
+        }
+
+        public virtual async Task<T> GetByIdAsync(int id)
+        {
+            return await DbSet.FindAsync(id);
+        }
+
+        public virtual async Task AddAsync(T entity)
+        {
+            var dbEntityEntry = DbContext.Entry(entity);
+
+            if (dbEntityEntry.State != EntityState.Detached)
+            {
+                dbEntityEntry.State = EntityState.Added;
+            }
+            else
+            {
+                await DbSet.AddAsync(entity);
+            }
+        }
+    }
 }

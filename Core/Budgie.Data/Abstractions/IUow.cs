@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Budgie.Core;
+﻿using Budgie.Core;
+using System.Threading.Tasks;
 
 namespace Budgie.Data.Abstractions
 {
@@ -10,10 +10,10 @@ namespace Budgie.Data.Abstractions
 
         IRepository<User> Users { get; }
         IBudgetRepository Budgets { get; }
-        IRepository<Category> Categories { get; }
+        ICategoryRepository Categories { get; }
         IRepository<Income> Incomes { get; }
         IRepository<Outgoing> Outgoings { get; }
         IRepository<Saving> Savings { get; }
-        IRepository<Transaction> Transactions { get; }
+        ITransactionRepository Transactions { get; }
     }
 }

@@ -1,15 +1,16 @@
 ﻿using System;
 using AutoMapper;
 using Budgie.Core;
+using Budgie.Core.Contracts.Security;
 using Budgie.Core.Enums;
 using Budgie.Data.Helpers;
 using Budgie.Data.Services;
-using Budgie.Framework.Facade.Middlewares;
 using Budgie.Framework.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
@@ -72,6 +73,7 @@ namespace Budgie.Api
             services.AddDevelopmentDataLayer();
 
             services.AddTransient<ITokenResolverMiddleware, DevTokenResolverMiddleware>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -110,6 +112,7 @@ namespace Budgie.Api
             services.AddDataLayer();
 
             services.AddTransient<ITokenResolverMiddleware, TokenResolverMiddleware>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
@@ -124,7 +127,7 @@ namespace Budgie.Api
         {
             if (env.IsDevelopment())
             {
-                using (var serviceScope = app.ApplicationServices.CreateScope())
+                using(var serviceScope = app.ApplicationServices.CreateScope())
                 {
                     var context = serviceScope.ServiceProvider.GetService<BudgieDbContext>();
                     AddTestData(context);
