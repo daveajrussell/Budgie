@@ -22,7 +22,7 @@ export class BudgetService extends BaseService {
   }
 
   public editOutgoing = (outgoing: Outgoing): Observable<any> => {
-    return this.http.patch(this.accountsUrl, outgoing, this.httpOptions)
+    return this.http.patch(`${this.accountsUrl}/outgoing/${outgoing.id}/edit`, outgoing, this.httpOptions)
       .pipe(catchError(this.handleError<Outgoing>('editOutgoing')));
   }
 
@@ -32,7 +32,7 @@ export class BudgetService extends BaseService {
   }
 
   public editTransaction = (transaction: Transaction): Observable<any> => {
-    return this.http.patch(`${this.accountsUrl}/add`, transaction, this.httpOptions)
+    return this.http.patch(`${this.accountsUrl}/edit`, transaction, this.httpOptions)
       .pipe(catchError(this.handleError<Transaction>('editTransaction')));
   }
 

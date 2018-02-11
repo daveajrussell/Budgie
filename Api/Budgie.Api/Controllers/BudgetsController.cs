@@ -51,6 +51,7 @@ namespace Budgie.Api.Controllers
                     .Select(x => new Income
                     {
                         BudgetId = budget.Id,
+                        UserId = Token.UserId,
                         DateAdded = DateTime.UtcNow,
                         CategoryId = x.Id,
                         Total = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
@@ -65,6 +66,7 @@ namespace Budgie.Api.Controllers
                     .Select(x => new Outgoing
                     {
                         BudgetId = budget.Id,
+                        UserId = Token.UserId,
                         DateAdded = DateTime.UtcNow,
                         CategoryId = x.Id,
                         Budgeted = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
@@ -79,6 +81,7 @@ namespace Budgie.Api.Controllers
                     .Select(x => new Saving
                     {
                         BudgetId = budget.Id,
+                        UserId = Token.UserId,
                         DateAdded = DateTime.UtcNow,
                         CategoryId = x.Id,
                         Total = x.Recurring && x.RecurringValue.HasValue ? x.RecurringValue.Value : 0,
@@ -123,7 +126,7 @@ namespace Budgie.Api.Controllers
         [Route("add")]
         public async Task<IActionResult> AddTransaction([FromBody] ApiTransaction model)
         {
-            var budget = await _uow.Budgets.GetByIdAsync(model.Budget.Id);
+            var budget = await _uow.Budgets.GetByIdAsync(model.BudgetId);
             var category = await _uow.Categories.GetByIdAsync(model.Category.Id);
             var transaction = new Transaction
             {
@@ -180,12 +183,34 @@ namespace Budgie.Api.Controllers
             return new NotFoundResult();
         }
 
+        [HttpPatch]
+        [Route("outgoing/{id:int}/edit")]
+        public async Task<IActionResult> EditOutgoing(int id, [FromBody] ApiOutgoing model)
+        {
+            var outgoing = _uow.Outgoings.GetAll()
+                .Where(x => x.UserId == Token.UserId)
+                .Where(x => x.Id == id)
+                .FirstOrDefault();
+
+            if (outgoing != null)
+            {
+                outgoing.DateModified = DateTime.UtcNow;
+                outgoing.Budgeted = model.Budgeted;
+                _uow.Outgoings.Update(outgoing);
+                await _uow.CommitAsync();
+
+                return new OkResult();
+            }
+
+            return new NotFoundResult();
+        }
+
         private void UpdateTransaction(ApiTransaction model)
         {
             if (model.Category.Type == CategoryType.Income)
             {
                 var income = _uow.Incomes.GetAll()
-                    .Where(x => x.BudgetId == model.Budget.Id)
+                    .Where(x => x.BudgetId == model.BudgetId)
                     .Where(x => x.CategoryId == model.Category.Id)
                     .FirstOrDefault();
 
@@ -193,6 +218,7 @@ namespace Budgie.Api.Controllers
                 {
                     income.Resolved = model.Resolved;
                     income.DateModified = DateTime.UtcNow;
+                    income.Total = model.Amount;
 
                     _uow.Incomes.Update(income);
                 }
@@ -200,7 +226,7 @@ namespace Budgie.Api.Controllers
             else if (model.Category.Type == CategoryType.Dedicated || model.Category.Type == CategoryType.Variable)
             {
                 var outgoing = _uow.Outgoings.GetAll()
-                    .Where(x => x.BudgetId == model.Budget.Id)
+                    .Where(x => x.BudgetId == model.BudgetId)
                     .Where(x => x.CategoryId == model.Category.Id)
                     .FirstOrDefault();
 
@@ -217,7 +243,7 @@ namespace Budgie.Api.Controllers
             else if (model.Category.Type == CategoryType.Savings)
             {
                 var saving = _uow.Savings.GetAll()
-                    .Where(x => x.BudgetId == model.Budget.Id)
+                    .Where(x => x.BudgetId == model.BudgetId)
                     .Where(x => x.CategoryId == model.Category.Id)
                     .FirstOrDefault();
 
@@ -225,6 +251,7 @@ namespace Budgie.Api.Controllers
                 {
                     saving.DateModified = DateTime.UtcNow;
                     saving.Resolved = model.Resolved;
+                    saving.Total = model.Amount;
 
                     _uow.Savings.Update(saving);
                 }

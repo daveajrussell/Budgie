@@ -39,10 +39,10 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card">
         <div class="card-body pb-0">
-          <h4 class="mb-0 text-success" [class.textSuccess]="budget.incomeVsExpenditure >= 0" [class.textDanger]="budget.incomeVsExpenditure < 0">
+          <h4 class="mb-0" [class.text-success]="budget.incomeVsExpenditure >= 0" [class.text-danger]="budget.incomeVsExpenditure < 0">
             <span *ngIf="budget.incomeVsExpenditure >= 0">+</span>
             <span *ngIf="budget.incomeVsExpenditure < 0">-</span>
-            £{{budget.incomeVsExpenditure}}
+            £{{budget.incomeVsExpenditure | absoluteNumber}}
           </h4>
           <p class="text-muted text-uppercase font-weight-bold font-xs">Income/expenditure</p>
         </div>
@@ -99,7 +99,8 @@
                   <tr>
                     <td>Budgeted</td>
                     <td class="text-right">
-                      £<inline-editor type="text" [(ngModel)]="item.budgeted" (onSave)="saveEditable($event)" name="budgeted" size="8"></inline-editor>
+                      £
+                      <inline-editor type="text" [(ngModel)]="item.budgeted" (onSave)="saveEditable($event, item)" name="budgeted" size="8"></inline-editor>
                     </td>
                   </tr>
                   <tr>
@@ -108,7 +109,7 @@
                   </tr>
                   <tr>
                     <td>Remaining</td>
-                    <td class="text-right">£{{item.budgeted - item.actual}}</td>
+                    <td class="text-right" [class.text-danger]="item.remaining < 0">£{{item.remaining}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -242,7 +243,8 @@
       <div class="col-sm-12">
         <div class="form-group">
           <label for="name">Date</label>
-          <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" bsDatepicker [(ngModel)]="bsModalRef.content.date">
+          <input type="text" class="form-control" [bsConfig]="bsConfig" [minDate]="minDate" [maxDate]="maxDate" bsDatepicker [bsValue]="parseDate(bsModalRef.content.date)"
+            [(ngModel)]="bsModalRef.content.date">
         </div>
       </div>
     </div>
@@ -250,7 +252,7 @@
     <div class="row">
       <div class="form-group col-sm-12">
         <label for="type">Category</label>
-        <select [(ngModel)]="bsModalRef.content.categoryId" class="form-control" id="category">
+        <select [(ngModel)]="bsModalRef.content.category.id" class="form-control" id="category">
           <option value="0">Select</option>
           <option *ngFor="let category of categories" [value]="category.id" [label]="category.name"></option>
         </select>
@@ -277,7 +279,7 @@
     <!--/.row-->
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger left" (click)="deleteTransaction(bsModalRef.content)">Delete</button>
+    <!-- <button type="button" class="btn btn-danger left" (click)="deleteTransaction(bsModalRef.content)">Delete</button> -->
     <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
     <button type="button" class="btn btn-primary" (click)="editTransaction(bsModalRef.content)">Save changes</button>
   </div>

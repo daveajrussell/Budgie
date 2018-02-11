@@ -59,9 +59,12 @@ export class BudgetsComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>, content: Transaction) {
-    console.log(content);
     this.bsModalRef = this.modalService.show(template);
     this.bsModalRef.content = JSON.parse(JSON.stringify(content));
+  }
+
+  protected parseDate(date: string): Date {
+    return new Date(date);
   }
 
   closeModal() {
@@ -116,10 +119,69 @@ export class BudgetsComponent implements OnInit {
   }
 
   private recalculate() {
+    this.reset();
+    this.recalculateTransactions();
+    this.recalculateOutgoings();
+    this.recalculateTotals();
+  }
+
+  private reset() {
+    this.budget.totalBudgeted = 0;
+    this.budget.totalSaved = 0;
+    this.budget.incomeVsExpenditure = 0;
+    this.budget.incomes.forEach(x => x.total = 0);
     this.budget.outgoings.forEach(x => x.actual = 0);
-    this.budget.transactions.forEach((x) => {
-      let outgoing = this.budget.outgoings.find(y => y.category.id == x.category.id);
-      outgoing.actual += x.amount;
+    this.budget.savings.forEach(x => x.total = 0);
+  }
+
+  private recalculateTransactions() {
+    this.budget.transactions.forEach((transaction) => {
+
+      let income = this.budget.incomes.find((income) => {
+        return income.category.id === transaction.category.id;
+      });
+
+      if (income) {
+        income.total = Number(transaction.amount);
+      }
+
+      let outgoing = this.budget.outgoings.find((outgoing) => {
+        return outgoing.category.id === transaction.category.id;
+      });
+
+      if (outgoing) {
+        outgoing.actual += Number(transaction.amount);
+        this.budget.incomeVsExpenditure -= Number(transaction.amount);
+        outgoing.remaining = outgoing.budgeted - outgoing.actual;
+      }
+
+      let saving = this.budget.savings.find((saving) => {
+        return saving.category.id === transaction.category.id;
+      });
+
+      if (saving) {
+        saving.total = Number(transaction.amount);
+      }
+    });
+  }
+
+  private recalculateOutgoings() {
+    this.budget.outgoings.forEach((outgoing) => {
+      outgoing.remaining = outgoing.budgeted - outgoing.actual;
+    });
+  }
+
+  private recalculateTotals() {
+    this.budget.incomes.forEach((income) => {
+      this.budget.incomeVsExpenditure += Number(income.total);
+    });
+
+    this.budget.outgoings.forEach((outgoing) => {
+      this.budget.totalBudgeted += Number(outgoing.budgeted);
+    });
+
+    this.budget.savings.forEach((saving) => {
+      this.budget.totalSaved += Number(saving.total);
     });
   }
 
@@ -136,9 +198,9 @@ export class BudgetsComponent implements OnInit {
       .subscribe(categories => this.categories = categories);
   }
 
-  protected saveEditable($event: any) {
-    // call service to update outgoing actual spent
-    this.recalculate();
+  protected saveEditable($event: any, outgoing: Outgoing) {
+    this.budgetService.editOutgoing(outgoing)
+      .subscribe(x => this.recalculate());
   }
 
   private setDate = () => {

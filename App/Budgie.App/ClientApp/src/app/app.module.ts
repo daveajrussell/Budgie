@@ -70,17 +70,6 @@ const APP_SERVICES = [
   CategoryService
 ]
 
-// Import pipes
-import {
-  DateFormatPipe,
-  OutgoingTypePipe
-} from './pipes'
-
-const APP_PIPES = [
-  DateFormatPipe,
-  OutgoingTypePipe
-]
-
 // Import OIDC
 import {
   AuthModule,

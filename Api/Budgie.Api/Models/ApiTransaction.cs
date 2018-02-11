@@ -24,5 +24,5 @@ public class ApiTransaction
     public ApiCategory Category { get; set; }
 
     [DataMember]
-    public ApiBudget Budget { get; set; }
+    public int BudgetId { get; set; }
 }

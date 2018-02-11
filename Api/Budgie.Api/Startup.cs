@@ -127,7 +127,7 @@ namespace Budgie.Api
         {
             if (env.IsDevelopment())
             {
-                using(var serviceScope = app.ApplicationServices.CreateScope())
+                using (var serviceScope = app.ApplicationServices.CreateScope())
                 {
                     var context = serviceScope.ServiceProvider.GetService<BudgieDbContext>();
                     AddTestData(context);

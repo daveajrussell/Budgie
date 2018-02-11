@@ -21,18 +21,18 @@ export class Transaction {
     public date: Date;
     public amount: number;
     public notes: string;
-    public readonly budget: Budget = new Budget();
+    public budgetId: number;
     public readonly category: Category = new Category();
 
     constructor(budget: Budget = new Budget()) {
-        this.budget = budget;
+        this.budgetId = budget.id;
     }
 }
 
 export class Income {
     public readonly id: number = 0;
     public readonly name: string = '';
-    public readonly total: number = 0;
+    public total: number = 0;
     public readonly category: Category = new Category();
 }
 
@@ -41,15 +41,13 @@ export class Outgoing {
     public readonly name: string = '';
     public readonly budgeted: number = 0;
     public actual: number = 0;
-    public readonly remaining: number = 0;
+    public remaining: number = this.budgeted - this.actual;
     public readonly category: Category = new Category();
 }
 
 export class Saving {
     public readonly id: number = 0;
     public readonly name: string = '';
-    public target: number = 0;
-    public actual: number = 0;
-    public readonly remaining: number = 0;
+    public total: number = 0;
     public readonly category: Category = new Category();
 }
