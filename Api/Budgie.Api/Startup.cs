@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Budgie.Core;
 using Budgie.Core.Contracts.Security;
@@ -198,6 +199,86 @@ namespace Budgie.Api
                 Recurring = true,
                 RecurringDate = DateTime.UtcNow,
                 RecurringValue = 100
+            });
+
+            var income = new Income
+            {
+                Id = 1,
+                UserId = 1,
+                CategoryId = 2,
+                Date = DateTime.UtcNow,
+                Total = 1000
+            };
+
+            context.Incomes.Add(income);
+
+            var dedicated = new Outgoing
+            {
+                Id = 1,
+                UserId = 1,
+                Actual = 0,
+                CategoryId = 1,
+                Budgeted = 100,
+                Date = DateTime.UtcNow
+            };
+
+            context.Outgoings.Add(dedicated);
+
+            var variable = new Outgoing
+            {
+                Id = 2,
+                UserId = 1,
+                Actual = 0,
+                CategoryId = 3,
+                Budgeted = 250,
+                Date = DateTime.UtcNow
+            };
+
+            context.Outgoings.Add(variable);
+
+            var saving = new Saving
+            {
+                Id = 1,
+                UserId = 1,
+                CategoryId = 4,
+                Total = 250,
+                Date = DateTime.UtcNow
+            };
+
+            context.Savings.Add(saving);
+
+            var variableTransactionOne = new Transaction
+            {
+                Id = 1,
+                UserId = 1,
+                Amount = 100,
+                Date = DateTime.UtcNow,
+                CategoryId = 3,
+                Notes = "Test"
+            };
+
+            var variableTransactionTwo = new Transaction
+            {
+                Id = 2,
+                UserId = 1,
+                Amount = 100,
+                Date = DateTime.UtcNow,
+                CategoryId = 3,
+                Notes = "Test 2"
+            };
+
+            context.Transactions.AddRangeAsync(variableTransactionOne, variableTransactionTwo);
+
+            context.Budgets.Add(new Budget
+            {
+                Id = 1,
+                Year = 2018,
+                Month = 2,
+                UserId = 1,
+                Incomes = new List<Income> { income },
+                Outgoings = new List<Outgoing> { dedicated, variable },
+                Savings = new List<Saving> { saving },
+                Transactions = new List<Transaction> { variableTransactionOne, variableTransactionTwo }
             });
 
             context.SaveChanges();

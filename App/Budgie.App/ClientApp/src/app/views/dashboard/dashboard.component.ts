@@ -19,6 +19,9 @@ export class DashboardComponent implements OnInit {
   public mainChartData1: Array<number> = [];
   public mainChartData2: Array<number> = [];
   public mainChartData3: Array<number> = [];
+  public mainChartData4: Array<number> = [];
+  public mainChartData5: Array<number> = [];
+  public mainChartData6: Array<number> = [];
 
   public mainChartData: Array<any> = [
     {
@@ -27,7 +30,22 @@ export class DashboardComponent implements OnInit {
       label: 'Utilities'
     },
     {
+      type: 'bar',
+      data: this.mainChartData2,
+      label: 'Groceries'
+    },
+    {
+      type: 'bar',
       data: this.mainChartData3,
+      label: 'Lunches'
+    },
+    {
+      type: 'bar',
+      data: this.mainChartData4,
+      label: 'Eating out'
+    },
+    {
+      data: this.mainChartData5,
       type: 'line',
       label: 'Savings'
     }
@@ -55,8 +73,8 @@ export class DashboardComponent implements OnInit {
         ticks: {
           beginAtZero: true,
           maxTicksLimit: 5,
-          stepSize: Math.ceil(250 / 5),
-          max: 250
+          stepSize: Math.ceil(500 / 5),
+          max: 500
         }
       }]
     },
@@ -85,6 +103,21 @@ export class DashboardComponent implements OnInit {
     { // brandSuccess
       backgroundColor: this.convertHex(this.brandSuccess, 10),
       borderColor: this.brandSuccess,
+      pointHoverBackgroundColor: '#fff'
+    },
+    { // brandInfo
+      backgroundColor: this.convertHex(this.brandDanger, 10),
+      borderColor: this.brandDanger,
+      pointHoverBackgroundColor: '#fff'
+    },
+    { // brandSuccess
+      backgroundColor: this.convertHex(this.brandInfo, 10),
+      borderColor: this.brandInfo,
+      pointHoverBackgroundColor: '#fff'
+    },
+    { // brandSuccess
+      backgroundColor: this.convertHex(this.brandWarning, 10),
+      borderColor: this.brandWarning,
       pointHoverBackgroundColor: '#fff'
     },
     { // brandDanger
@@ -130,8 +163,11 @@ export class DashboardComponent implements OnInit {
     for (let i = 0; i <= this.mainChartElements; i++) {
       this.mainChartData1.push(this.random(1, 100));
       this.mainChartData2.push(this.random(1, 100));
+      this.mainChartData3.push(this.random(1, 100));
+      this.mainChartData4.push(this.random(1, 100));
+      this.mainChartData5.push(this.random(1, 100));
       cumulative += 1 * this.random(1, 10);
-      this.mainChartData3.push(cumulative);
+      this.mainChartData6.push(cumulative);
     }
 
     this.date = moment().format('MMMM YYYY');

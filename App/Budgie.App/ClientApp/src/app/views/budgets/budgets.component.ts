@@ -190,6 +190,7 @@ export class BudgetsComponent implements OnInit {
       .getBudget(this.yearNumber, this.monthNumber + 1)
       .subscribe((budget) => {
         this.budget = budget;
+        this.recalculate();
         this.transaction = new Transaction(budget);
       });
 
