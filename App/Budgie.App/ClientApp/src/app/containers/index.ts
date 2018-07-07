@@ -1,1 +1,1 @@
-export * from './full-layout';
+export * from './default-layout';

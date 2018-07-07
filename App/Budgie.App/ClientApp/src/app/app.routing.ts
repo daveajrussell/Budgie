@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 // Import Containers
 import {
-  FullLayoutComponent
+  DefaultLayoutComponent
 } from './containers';
 
 export const routes: Routes = [
@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: FullLayoutComponent,
+    component: DefaultLayoutComponent,
     data: {
       title: 'Home'
     },

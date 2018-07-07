@@ -2,61 +2,26 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
+
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 
 // Import containers
 import {
-  FullLayoutComponent
+  DefaultLayoutComponent
 } from './containers';
 
 const APP_CONTAINERS = [
-  FullLayoutComponent
+  DefaultLayoutComponent
 ]
-
-// Import components
-import {
-  AppAsideComponent,
-  AppBreadcrumbsComponent,
-  AppFooterComponent,
-  AppHeaderComponent,
-  AppSidebarComponent,
-  AppSidebarFooterComponent,
-  AppSidebarFormComponent,
-  AppSidebarHeaderComponent,
-  AppSidebarMinimizerComponent,
-  AppUnauthorizedComponent,
-  APP_SIDEBAR_NAV
-} from './components';
-
-const APP_COMPONENTS = [
-  AppAsideComponent,
-  AppBreadcrumbsComponent,
-  AppFooterComponent,
-  AppHeaderComponent,
-  AppSidebarComponent,
-  AppSidebarFooterComponent,
-  AppSidebarFormComponent,
-  AppSidebarHeaderComponent,
-  AppSidebarMinimizerComponent,
-  APP_SIDEBAR_NAV
-]
-
-// Import directives
-import {
-  AsideToggleDirective,
-  NAV_DROPDOWN_DIRECTIVES,
-  ReplaceDirective,
-  SIDEBAR_TOGGLE_DIRECTIVES
-} from './directives';
-
-const APP_DIRECTIVES = [
-  AsideToggleDirective,
-  NAV_DROPDOWN_DIRECTIVES,
-  ReplaceDirective,
-  SIDEBAR_TOGGLE_DIRECTIVES
-]
-
 // Import services
 import {
   AuthService,
@@ -77,6 +42,14 @@ import {
   OidcConfigService
 } from 'angular-auth-oidc-client';
 
+import {
+  AppAsideModule,
+  AppBreadcrumbModule,
+  AppHeaderModule,
+  AppFooterModule,
+  AppSidebarModule,
+} from '@coreui/angular'
+
 // Import routing module
 import { AppRoutingModule } from './app.routing';
 
@@ -96,6 +69,12 @@ import { InlineEditorModule } from '@qontu/ngx-inline-editor';
     //AuthModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
+    AppAsideModule,
+    AppBreadcrumbModule.forRoot(),
+    AppFooterModule,
+    AppHeaderModule,
+    AppSidebarModule,
+    PerfectScrollbarModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     ChartsModule,
@@ -103,9 +82,7 @@ import { InlineEditorModule } from '@qontu/ngx-inline-editor';
   ],
   declarations: [
     AppComponent,
-    ...APP_CONTAINERS,
-    ...APP_COMPONENTS,
-    ...APP_DIRECTIVES
+    ...APP_CONTAINERS
   ],
   providers: [
     ...APP_SERVICES,
@@ -120,9 +97,9 @@ import { InlineEditorModule } from '@qontu/ngx-inline-editor';
     //   multi: true
     // },
     {
-      provide: LocationStrategy,
-      useClass: HashLocationStrategy
-    }],
-  bootstrap: [AppComponent]
+    provide: LocationStrategy,
+    useClass: HashLocationStrategy
+  }],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
