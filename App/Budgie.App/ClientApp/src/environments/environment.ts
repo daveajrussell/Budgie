@@ -6,7 +6,6 @@
 export const environment = {
   production: false,
   identityServerBaseUri: 'https://localhost:44338',
-  apiBaseUri: 'https://localhost:44384/',
-  //apiBaseUri: 'http://localhost:5000/',
+  apiBaseUri: 'https://localhost:44384',
   appBaseUri: 'https://localhost:44308'
 };

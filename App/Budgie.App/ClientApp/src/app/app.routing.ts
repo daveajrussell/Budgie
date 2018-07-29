@@ -7,9 +7,14 @@ import {
 } from './containers';
 
 export const routes: Routes = [
+  // {
+  //   path: '',
+  //   redirectTo: 'dashboard',
+  //   pathMatch: 'full',
+  // },
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'budgets',
     pathMatch: 'full',
   },
   {
@@ -19,17 +24,17 @@ export const routes: Routes = [
       title: 'Home'
     },
     children: [
+      // {
+      //   path: 'dashboard',
+      //   loadChildren: './views/dashboard/dashboard.module#DashboardModule'
+      // },
       {
-        path: 'dashboard',
-        loadChildren: './views/dashboard/dashboard.module#DashboardModule'
+        path: 'budgets',
+        loadChildren: './views/budgets/budgets.module#BudgetsModule'
       },
       {
         path: 'categories',
         loadChildren: './views/categories/categories.module#CategoriesModule'
-      },
-      {
-        path: 'budgets',
-        loadChildren: './views/budgets/budgets.module#BudgetsModule'
       }
     ]
   }

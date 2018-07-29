@@ -59,14 +59,14 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { InlineEditorModule } from '@qontu/ngx-inline-editor';
 
-// export function loadConfig(oidcConfigService: OidcConfigService) {
-//   return () => oidcConfigService.load_using_stsServer(environment.identityServerBaseUri);
-// }
+export function loadConfig(oidcConfigService: OidcConfigService) {
+  return () => oidcConfigService.load_using_stsServer(environment.identityServerBaseUri);
+}
 
 @NgModule({
   imports: [
     HttpClientModule,
-    //AuthModule.forRoot(),
+    AuthModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     AppAsideModule,
@@ -86,20 +86,20 @@ import { InlineEditorModule } from '@qontu/ngx-inline-editor';
   ],
   providers: [
     ...APP_SERVICES,
-    // AuthModule,
-    // AuthService,
-    // OidcSecurityService,
-    // OidcConfigService,
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: loadConfig,
-    //   deps: [OidcConfigService],
-    //   multi: true
-    // },
+    AuthModule,
+    AuthService,
+    OidcSecurityService,
+    OidcConfigService,
     {
-    provide: LocationStrategy,
-    useClass: HashLocationStrategy
-  }],
-  bootstrap: [ AppComponent ]
+      provide: APP_INITIALIZER,
+      useFactory: loadConfig,
+      deps: [OidcConfigService],
+      multi: true
+    },
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy
+    }],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

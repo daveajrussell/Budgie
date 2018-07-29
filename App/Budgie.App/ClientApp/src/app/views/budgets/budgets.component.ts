@@ -8,7 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import * as moment from 'moment';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { BudgetService, CategoryService } from '../../services';
-import { Budget, Transaction, Category, CategoryType, Outgoing } from 'app/models';
+import { Budget, Transaction, Category, CategoryType, Outgoing } from '../../models';
 
 @Component({
   templateUrl: './budgets.component.html'
