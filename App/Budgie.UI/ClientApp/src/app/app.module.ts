@@ -1,10 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -16,11 +14,13 @@ import { environment } from '../environments/environment';
 
 // Import containers
 import {
-  DefaultLayoutComponent
+  DefaultLayoutComponent,
+  UnauthorisedLayoutComponent
 } from './containers';
 
 const APP_CONTAINERS = [
-  DefaultLayoutComponent
+  DefaultLayoutComponent,
+  UnauthorisedLayoutComponent
 ]
 // Import services
 import {
@@ -42,6 +42,8 @@ import {
   OidcConfigService
 } from 'angular-auth-oidc-client';
 
+import { AuthorizationGuard } from './authorization.guard';
+
 import {
   AppAsideModule,
   AppBreadcrumbModule,
@@ -50,8 +52,7 @@ import {
   AppSidebarModule,
 } from '@coreui/angular'
 
-// Import routing module
-import { AppRoutingModule } from './app.routing';
+import { routing } from './app.routing';
 
 // Import 3rd party components
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -68,7 +69,7 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
     HttpClientModule,
     AuthModule.forRoot(),
     BrowserModule,
-    AppRoutingModule,
+    routing,
     AppAsideModule,
     AppBreadcrumbModule.forRoot(),
     AppFooterModule,
@@ -96,10 +97,8 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
       deps: [OidcConfigService],
       multi: true
     },
-    {
-      provide: LocationStrategy,
-      useClass: HashLocationStrategy
-    }],
+    AuthorizationGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

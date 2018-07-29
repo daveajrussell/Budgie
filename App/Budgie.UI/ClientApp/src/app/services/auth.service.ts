@@ -23,8 +23,8 @@ export class AuthService implements OnInit, OnDestroy {
     openIdImplicitFlowConfiguration.response_type = 'id_token token';
     openIdImplicitFlowConfiguration.scope = 'openid profile budgie.api';
     openIdImplicitFlowConfiguration.post_logout_redirect_uri = originUrl + 'home';
-    openIdImplicitFlowConfiguration.forbidden_route = '/forbidden';
-    openIdImplicitFlowConfiguration.unauthorized_route = '/unauthorized';
+    openIdImplicitFlowConfiguration.forbidden_route = originUrl + 'home';
+    openIdImplicitFlowConfiguration.unauthorized_route = originUrl + 'home';
     openIdImplicitFlowConfiguration.auto_userinfo = true;
     openIdImplicitFlowConfiguration.log_console_warning_active = true;
     openIdImplicitFlowConfiguration.log_console_debug_active = false;

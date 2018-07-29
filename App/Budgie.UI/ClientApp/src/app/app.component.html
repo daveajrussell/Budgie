@@ -1,15 +1,16 @@
 <router-outlet></router-outlet>
-<app-header [fixed]="true" [sidebarToggler]="'lg'" [asideMenuToggler]="false">
+<app-header [sidebarToggler]="isAuthorized" [fixed]="true" [sidebarToggler]="'lg'" [asideMenuToggler]="false">
     <ul class="nav navbar-nav ml-auto">
         <li class="nav-item pr-3" placement="bottom right">
-            <button class="btn btn-outline-primary btn-sm" type="button" (click)="logout()">Logout</button>
+            <button *ngIf="isAuthorized" class="btn btn-outline-primary btn-sm" type="button" (click)="logout()">Logout</button>
+            <button *ngIf="!isAuthorized" class="btn btn-outline-primary btn-sm" type="button" (click)="login()">Login</button>
         </li>
     </ul>
 </app-header>
 
 <app-footer>
     <span>
-        <a href="https://coreui.io">CoreUI</a> &copy; 2018 creativeLabs.</span>
+        <a href="#">Budgie</a> &copy; 2018</span>
     <span class="ml-auto">Powered by
         <a href="https://coreui.io/angular">CoreUI for Angular</a>
     </span>

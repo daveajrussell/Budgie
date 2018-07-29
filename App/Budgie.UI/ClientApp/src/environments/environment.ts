@@ -5,7 +5,8 @@
 
 export const environment = {
   production: false,
-  identityServerBaseUri: 'https://localhost:44338',
-  apiBaseUri: 'https://localhost:44384',
-  appBaseUri: 'https://localhost:44308'
+  // identityServerBaseUri: 'https://localhost:44338',
+  // apiBaseUri: 'https://localhost:44384',
+  identityServerBaseUri: 'https://budgie-identity.azurewebsites.net',
+  apiBaseUri: 'https://budgie-api.azurewebsites.net'
 };

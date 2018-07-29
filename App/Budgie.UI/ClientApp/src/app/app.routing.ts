@@ -1,24 +1,19 @@
-import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // Import Containers
 import {
-  DefaultLayoutComponent
+  DefaultLayoutComponent,
+  UnauthorisedLayoutComponent
 } from './containers';
 
+import { AuthorizationGuard } from './authorization.guard';
+
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   redirectTo: 'dashboard',
-  //   pathMatch: 'full',
-  // },
+  { path: '', component: UnauthorisedLayoutComponent, pathMatch: 'full' },
+  { path: 'home', component: UnauthorisedLayoutComponent, pathMatch: 'full' },
   {
     path: '',
-    redirectTo: 'budgets',
-    pathMatch: 'full',
-  },
-  {
-    path: '',
+    canActivate: [AuthorizationGuard],
     component: DefaultLayoutComponent,
     data: {
       title: 'Home'
@@ -40,8 +35,4 @@ export const routes: Routes = [
   }
 ];
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
+export const routing = RouterModule.forRoot(routes);
