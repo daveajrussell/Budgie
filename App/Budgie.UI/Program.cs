@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Budgie.App.NgNext
+namespace Budgie.UI
 {
     public class Program
     {

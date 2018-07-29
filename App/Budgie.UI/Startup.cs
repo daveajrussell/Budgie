@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Budgie.App.NgNext
+namespace Budgie.UI
 {
     public class Startup
     {
