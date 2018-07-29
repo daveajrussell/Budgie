@@ -25,6 +25,15 @@ namespace Budgie.Data.Services
             builder.Entity<User>().HasMany(b => b.Budgets).WithOne(u => u.User)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<User>().HasMany(i => i.Incomes).WithOne(u => u.User)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<User>().HasMany(o => o.Outgoings).WithOne(u => u.User)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<User>().HasMany(s => s.Savings).WithOne(u => u.User)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<Budget>().HasMany(i => i.Incomes).WithOne(b => b.Budget)
                 .OnDelete(DeleteBehavior.Restrict);
 

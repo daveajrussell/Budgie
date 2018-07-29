@@ -23,6 +23,7 @@ namespace Budgie.Core
         public virtual Budget Budget { get; set; }
 
         public virtual User User { get; set; }
+
         public int UserId { get; set; }
     }
 }

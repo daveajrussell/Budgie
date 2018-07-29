@@ -18,7 +18,7 @@ export class AuthService implements OnInit, OnDestroy {
   ) {
     const openIdImplicitFlowConfiguration = new OpenIDImplicitFlowConfiguration();
     openIdImplicitFlowConfiguration.stsServer = identityUrl;
-    openIdImplicitFlowConfiguration.redirect_url = originUrl + 'callback';
+    openIdImplicitFlowConfiguration.redirect_url = originUrl + 'home';
     openIdImplicitFlowConfiguration.client_id = 'budgie.spa.app';
     openIdImplicitFlowConfiguration.response_type = 'id_token token';
     openIdImplicitFlowConfiguration.scope = 'openid profile budgie.api';

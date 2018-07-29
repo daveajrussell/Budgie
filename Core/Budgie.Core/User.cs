@@ -10,5 +10,11 @@ namespace Budgie.Core
         public string LastName { get; set; }
 
         public virtual ICollection<Budget> Budgets { get; set; }
+
+        public virtual ICollection<Income> Incomes { get; set; }
+
+        public virtual ICollection<Outgoing> Outgoings { get; set; }
+
+        public virtual ICollection<Saving> Savings { get; set; }
     }
 }
