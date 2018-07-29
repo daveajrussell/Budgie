@@ -7,17 +7,12 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
 
-    constructor(private router: Router, private oidcSecurityService: OidcSecurityService) { }
+  constructor(private router: Router, private oidcSecurityService: OidcSecurityService) { }
 
-    public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-        return this.oidcSecurityService.getIsAuthorized().pipe(
-            map((isAuthorized: boolean) => {
-                if (isAuthorized) {
-                    return true;
-                }
-
-                return false;
-            })
-        );
-    }
+  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
+    return this.oidcSecurityService.getIsAuthorized().pipe(
+      map((isAuthorized: boolean) => {
+        return isAuthorized;
+      }));
+  }
 }

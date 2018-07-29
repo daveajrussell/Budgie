@@ -3,10 +3,11 @@ import { Router, NavigationEnd } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from './services/auth.service';
+import { AuthConfiguration, AuthorizationResult } from 'angular-auth-oidc-client';
 
 @Component({
-  // tslint:disable-next-line
   selector: 'body',
+  styleUrls: ['./app.component.css'],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
@@ -28,6 +29,12 @@ export class AppComponent implements OnInit {
       (isAuthorized: boolean) => {
         this.isAuthorized = isAuthorized;
       });
+
+    this.authService.onAuthorizationResult().subscribe((authResult: AuthorizationResult) => {
+      if (authResult === AuthorizationResult.authorized) {
+        window.setTimeout(() => this.router.navigate(['budgets']), 1);
+      }
+    });
   }
 
   ngOnDestroy(): void {

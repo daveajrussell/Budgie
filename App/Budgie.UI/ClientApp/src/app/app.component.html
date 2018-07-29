@@ -1,5 +1,5 @@
 <router-outlet></router-outlet>
-<app-header [sidebarToggler]="isAuthorized" [fixed]="true" [sidebarToggler]="'lg'" [asideMenuToggler]="false">
+<app-header [sidebarToggler]="isAuthorized && 'lg'" [fixed]="true" [asideMenuToggler]="false">
     <ul class="nav navbar-nav ml-auto">
         <li class="nav-item pr-3" placement="bottom right">
             <button *ngIf="isAuthorized" class="btn btn-outline-primary btn-sm" type="button" (click)="logout()">Logout</button>

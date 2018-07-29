@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { Subscription } from 'rxjs/Subscription';
 import { catchError } from 'rxjs/operators';
-import { BaseService } from 'app/services/base.service';
-import { Category } from 'app/models';
+import { BaseService } from './base.service';
+import { Category } from '../models';
 
 @Injectable()
 export class CategoryService extends BaseService {

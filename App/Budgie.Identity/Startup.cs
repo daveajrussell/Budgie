@@ -36,6 +36,58 @@ namespace Budgie.Identity
             Configuration = builder.Build();
         }
 
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            var connectionString = Configuration[ConnectionStringName];
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+            });
+
+            services.AddMvc();
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
+
+            services.AddDbContext<BudgieDbContext>(options =>
+                options.UseSqlServer(connectionString,
+                sql => sql.MigrationsAssembly(migrationsAssembly)));
+
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<BudgieDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddTransient<IProfileService, BudgieProfileService>();
+
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryClients(Config.GetClients(Configuration))
+                .AddAspNetIdentity<User>()
+                .AddProfileService<BudgieProfileService>();
+
+            services.AddAuthentication()
+               .AddGoogle("Google", options =>
+               {
+                   options.ClientId = Configuration[GoogleClientId];
+                   options.ClientSecret = Configuration[GoogleSecret];
+               });
+
+            services.AddAuthentication()
+                .AddFacebook("Facebook", options =>
+                {
+                    options.ClientId = Configuration[FacebookClientId];
+                    options.ClientSecret = Configuration[FacebookSecret];
+                });
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration[ConnectionStringName];
@@ -104,8 +156,6 @@ namespace Budgie.Identity
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            InitialiseDatabase(app);
-
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
 
@@ -118,6 +168,7 @@ namespace Budgie.Identity
             }
             else
             {
+                InitialiseDatabase(app);
                 app.UseExceptionHandler("/Home/Error");
             }
 

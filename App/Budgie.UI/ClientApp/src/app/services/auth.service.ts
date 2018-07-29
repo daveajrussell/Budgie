@@ -1,9 +1,9 @@
-import { Injectable, Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Injectable, Component, OnInit, OnDestroy, Inject, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { Subscription } from 'rxjs/Subscription';
 
-import { AuthWellKnownEndpoints, OidcSecurityService, OidcConfigService, OpenIDImplicitFlowConfiguration } from 'angular-auth-oidc-client';
+import { AuthWellKnownEndpoints, OidcSecurityService, OidcConfigService, OpenIDImplicitFlowConfiguration, AuthorizationResult } from 'angular-auth-oidc-client';
 
 @Injectable()
 export class AuthService implements OnInit, OnDestroy {
@@ -18,13 +18,13 @@ export class AuthService implements OnInit, OnDestroy {
   ) {
     const openIdImplicitFlowConfiguration = new OpenIDImplicitFlowConfiguration();
     openIdImplicitFlowConfiguration.stsServer = identityUrl;
-    openIdImplicitFlowConfiguration.redirect_url = originUrl + 'home';
+    openIdImplicitFlowConfiguration.redirect_url = originUrl + '/callback';
     openIdImplicitFlowConfiguration.client_id = 'budgie.spa.app';
     openIdImplicitFlowConfiguration.response_type = 'id_token token';
     openIdImplicitFlowConfiguration.scope = 'openid profile budgie.api';
-    openIdImplicitFlowConfiguration.post_logout_redirect_uri = originUrl + 'home';
-    openIdImplicitFlowConfiguration.forbidden_route = originUrl + 'home';
-    openIdImplicitFlowConfiguration.unauthorized_route = originUrl + 'home';
+    openIdImplicitFlowConfiguration.post_logout_redirect_uri = originUrl;
+    openIdImplicitFlowConfiguration.forbidden_route = originUrl;
+    openIdImplicitFlowConfiguration.unauthorized_route = originUrl;
     openIdImplicitFlowConfiguration.auto_userinfo = true;
     openIdImplicitFlowConfiguration.log_console_warning_active = true;
     openIdImplicitFlowConfiguration.log_console_debug_active = false;
@@ -60,6 +60,10 @@ export class AuthService implements OnInit, OnDestroy {
     return this.oidcSecurityService.getIsAuthorized();
   }
 
+  onAuthorizationResult(): EventEmitter<AuthorizationResult> {
+    return this.oidcSecurityService.onAuthorizationResult;
+  }
+
   login() {
     console.log('start login');
     this.oidcSecurityService.authorize();
@@ -79,38 +83,5 @@ export class AuthService implements OnInit, OnDestroy {
     if (typeof location !== "undefined" && window.location.hash) {
       this.oidcSecurityService.authorizedCallback();
     }
-  }
-
-  get(url: string): Observable<any> {
-    return this.http.get<any>(url, { headers: this.getHeaders() });
-  }
-
-  put(url: string, data: any): Observable<any> {
-    const body = JSON.stringify(data);
-    return this.http.put<any>(url, body, { headers: this.getHeaders() });
-  }
-
-  delete(url: string): Observable<any> {
-    return this.http.delete<any>(url, { headers: this.getHeaders() });
-  }
-
-  post(url: string, data: any): Observable<any> {
-    const body = JSON.stringify(data);
-    return this.http.post<any>(url, body, { headers: this.getHeaders() });
-  }
-
-  private getHeaders() {
-    let headers = new HttpHeaders();
-    headers = headers.set('Content-Type', 'application/json');
-    return this.appendAuthHeader(headers);
-  }
-
-  private appendAuthHeader(headers: HttpHeaders) {
-    const token = this.oidcSecurityService.getToken();
-
-    if (token === '') return headers;
-
-    const tokenValue = 'Bearer ' + token;
-    return headers.set('Authorization', tokenValue);
   }
 }

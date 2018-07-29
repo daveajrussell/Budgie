@@ -19,8 +19,6 @@
                 </div>
             }
 
-            <a asp-action="Login" asp-controller="Account">Click here to return to the login page</a>
-
             @if (Model.SignOutIframeUrl != null)
             {
                 <iframe width="0" height="0" class="signout" src="@Model.SignOutIframeUrl"></iframe>

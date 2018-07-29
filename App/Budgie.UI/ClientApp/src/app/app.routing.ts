@@ -9,8 +9,8 @@ import {
 import { AuthorizationGuard } from './authorization.guard';
 
 export const routes: Routes = [
-  { path: '', component: UnauthorisedLayoutComponent, pathMatch: 'full' },
-  { path: 'home', component: UnauthorisedLayoutComponent, pathMatch: 'full' },
+  { path: '', component: UnauthorisedLayoutComponent },
+  { path: 'callback', component: UnauthorisedLayoutComponent },
   {
     path: '',
     canActivate: [AuthorizationGuard],

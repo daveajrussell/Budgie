@@ -38,7 +38,7 @@ namespace Budgie.Identity
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
 
-                    RedirectUris = { configuration[AppBaseUri] },
+                    RedirectUris = { $"{configuration[AppBaseUri]}/callback" },
                     PostLogoutRedirectUris = { configuration[AppBaseUri] },
                     AllowedCorsOrigins = { configuration[AppBaseUri] },
 
